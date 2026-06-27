@@ -1,0 +1,11 @@
+# Used when Railway service root is set to apps/api/
+# pnpm detects the workspace root (../../) automatically and installs from there.
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["pnpm build"]
+
+[start]
+cmd = "node dist/index.js"

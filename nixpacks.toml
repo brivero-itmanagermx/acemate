@@ -1,0 +1,10 @@
+# Used when Railway service root is the monorepo root.
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["pnpm --filter @acemate/api build"]
+
+[start]
+cmd = "node apps/api/dist/index.js"
