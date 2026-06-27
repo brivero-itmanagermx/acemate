@@ -1,0 +1,13 @@
+{
+  "name": "acemate",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "pnpm --parallel dev",
+    "build": "pnpm --recursive build",
+    "typecheck": "pnpm --recursive typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

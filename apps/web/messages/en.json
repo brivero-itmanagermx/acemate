@@ -1,0 +1,281 @@
+{
+  "home": {
+    "title": "AceMate",
+    "tagline": "Your social tennis platform",
+    "description": "Track your tennis career, find opponents nearby, and compete in leagues.",
+    "getStarted": "Get Started"
+  },
+  "nav": {
+    "home": "Home",
+    "players": "Players",
+    "matches": "Matches",
+    "leagues": "Leagues",
+    "dashboard": "Dashboard",
+    "friends": "Friends"
+  },
+  "players": {
+    "title": "Find Players",
+    "searchPlaceholder": "Search by name or username…",
+    "searchPrompt": "Search for players to connect with.",
+    "noResults": "No players found",
+    "level": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "competitive": "Competitive"
+    }
+  },
+  "friends": {
+    "title": "Friends",
+    "tabs": {
+      "friends": "Friends",
+      "received": "Requests",
+      "sent": "Sent"
+    },
+    "noFriends": "No friends yet. Find players to connect!",
+    "noPending": "No pending requests",
+    "noSent": "No sent requests"
+  },
+  "friendship": {
+    "add": "Add friend",
+    "pending": "Pending",
+    "friends": "Friends ✓",
+    "accept": "Accept",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "remove": "Remove"
+  },
+  "auth": {
+    "signout": "Sign out",
+    "signin": {
+      "title": "Sign in to your account",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up",
+      "error": "Invalid email or password. Please try again."
+    },
+    "signup": {
+      "title": "Create your account",
+      "username": "Username",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "passwordHint": "At least 6 characters",
+      "submit": "Create account",
+      "submitting": "Creating account…",
+      "hasAccount": "Already have an account?",
+      "signinLink": "Sign in",
+      "confirmEmail": "Account created! Check your email to confirm before signing in.",
+      "error": "Something went wrong. Please try again."
+    }
+  },
+  "dashboard": {
+    "empty": {
+      "title": "Welcome to AceMate, {name}!",
+      "subtitle": "Your tennis journey starts here",
+      "description": "Register your first match to start building your history and tracking your progress.",
+      "cta": "Register your first match"
+    },
+    "stats": {
+      "totalMatches": "Matches",
+      "wins": "Wins",
+      "streak": "Streak"
+    },
+    "feed": {
+      "title": "Recent matches",
+      "empty": "No recent matches yet"
+    },
+    "matchCard": {
+      "won": "Won",
+      "lost": "Lost",
+      "pending": "Pending",
+      "guest": "Guest",
+      "ace": "Ace!",
+      "surface": {
+        "clay": "Clay",
+        "hard": "Hard",
+        "grass": "Grass",
+        "indoor": "Indoor"
+      }
+    },
+    "sidebar": {
+      "challenges": "Challenges",
+      "challengesEmpty": "No pending challenges.",
+      "challengesTease": "Challenges are coming in Phase 2.",
+      "leagues": "Nearby Leagues",
+      "leaguesTeaser": "Leagues are coming in Phase 2. Stay tuned!"
+    },
+    "newMatch": {
+      "title": "Register a match",
+      "back": "Back to dashboard",
+      "cancel": "Cancel",
+      "submit": "Register match",
+      "submitting": "Registering…",
+      "surface": "Surface",
+      "playedAt": "Date & time",
+      "locationName": "Location (optional)",
+      "notes": "Notes (optional)",
+      "opponent": {
+        "label": "Opponent",
+        "searchPlaceholder": "Search by username or name…",
+        "switchToGuest": "Add as guest",
+        "switchToSearch": "Search registered players",
+        "guestLabel": "Guest opponent",
+        "guestName": "Opponent name",
+        "guestEmail": "Email (optional)",
+        "selected": "{name} selected"
+      },
+      "sets": {
+        "label": "Score",
+        "you": "You",
+        "opponent": "Opp.",
+        "set": "Set {n}",
+        "addSet": "+ Add set",
+        "remove": "Remove"
+      },
+      "venue": {
+        "label": "Venue (optional)",
+        "searchPlaceholder": "Search venues or type to create…",
+        "addNew": "Add \"{name}\"",
+        "creating": "Creating…",
+        "yours": "yours"
+      },
+      "winner": {
+        "label": "Winner",
+        "me": "I won",
+        "opponent": "Opponent won",
+        "none": "Undecided"
+      }
+    }
+  },
+  "playerProfile": {
+    "editProfile": "Edit profile",
+    "notFound": "Player not found.",
+    "stats": {
+      "matches": "Matches",
+      "wins": "Wins",
+      "losses": "Losses",
+      "winRate": "Win rate",
+      "streak": "Streak"
+    },
+    "history": {
+      "title": "Match history",
+      "recentMatches": "Recent matches",
+      "loadMore": "Load more",
+      "loading": "Loading…",
+      "won": "Won",
+      "lost": "Lost",
+      "undecided": "No result",
+      "vs": "vs.",
+      "guest": "Guest",
+      "playedTogether": "You played this match",
+      "friendsOnly": "Add {name} as a friend to see their full match history.",
+      "noMatches": "No matches yet"
+    },
+    "info": {
+      "location": "Location",
+      "noLocation": "Location not shared",
+      "noBio": "No bio yet.",
+      "left": "Left-handed",
+      "right": "Right-handed"
+    }
+  },
+  "profile": {
+    "edit": {
+      "title": "Edit Profile",
+      "sections": {
+        "avatar": "Profile Photo",
+        "info": "Basic Info",
+        "game": "Your Game",
+        "location": "Location"
+      },
+      "fullName": "Full name",
+      "username": "Username",
+      "bio": "Bio",
+      "bioPlaceholder": "Tell other players about yourself…",
+      "level": "Skill level",
+      "hand": "Dominant hand",
+      "surface": "Preferred surface",
+      "currentCity": "Current area",
+      "noCity": "No location set",
+      "updateLocation": "Update location",
+      "detecting": "Detecting…",
+      "citySearch": "Or search by city",
+      "citySearchPlaceholder": "Type a city name…",
+      "privacyNotice": "Your exact location is never shared. Other players will only see your approximate area (±1km).",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "saved": "Profile updated!",
+      "avatarChange": "Change photo",
+      "avatarUploading": "Uploading…",
+      "locationDenied": "Location permission denied. Please allow it in your browser settings.",
+      "locationError": "Could not get your location. Please try again."
+    }
+  },
+  "onboarding": {
+    "steps": {
+      "aboutYou": "About you",
+      "yourGame": "Your game",
+      "location": "Location"
+    },
+    "buttons": {
+      "next": "Continue",
+      "back": "Back",
+      "finish": "Complete setup",
+      "finishing": "Saving…",
+      "skip": "Skip for now"
+    },
+    "step1": {
+      "title": "About you",
+      "subtitle": "Let's personalise your profile",
+      "avatar": "Profile photo",
+      "avatarChange": "Change photo",
+      "avatarUploading": "Uploading…",
+      "avatarError": "Upload failed — please try again",
+      "fullName": "Full name",
+      "username": "Username",
+      "usernameHint": "Letters, numbers and underscores only",
+      "usernameTooShort": "Minimum 3 characters",
+      "usernameChecking": "Checking…",
+      "usernameAvailable": "Username available",
+      "usernameTaken": "Username already taken"
+    },
+    "step2": {
+      "title": "Your game",
+      "subtitle": "Tell us about your playing style",
+      "levelLabel": "Skill level",
+      "beginner": "Beginner",
+      "beginnerDesc": "Just getting started",
+      "intermediate": "Intermediate",
+      "intermediateDesc": "Playing regularly",
+      "advanced": "Advanced",
+      "advancedDesc": "Competing locally",
+      "competitive": "Competitive",
+      "competitiveDesc": "Tournament player",
+      "handLabel": "Dominant hand",
+      "left": "Left",
+      "right": "Right",
+      "surfaceLabel": "Preferred surface",
+      "clay": "Clay",
+      "hard": "Hard",
+      "grass": "Grass",
+      "indoor": "Indoor"
+    },
+    "step3": {
+      "title": "Your location",
+      "subtitle": "Find players near you",
+      "description": "Sharing your location lets you appear in nearby player searches. You can always update this later from your profile.",
+      "allowButton": "Share my location",
+      "detecting": "Detecting…",
+      "detected": "Location detected",
+      "permissionDenied": "Permission denied. You can enable location from your browser settings.",
+      "genericError": "Could not detect location. Please try again.",
+      "coords": "Lat {lat}, Lon {lon}",
+      "noLocationWarning": "Without a location you won't appear in nearby player searches.",
+      "privacyNotice": "Your exact location is never shared. Other players will only see your approximate area (±1km)."
+    }
+  }
+}
