@@ -11,16 +11,25 @@ import friendships from './routes/friendships';
 const app = new Hono();
 
 app.use(logger());
+
+const ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'https://acemate-web.vercel.app',
+  ...(process.env.WEB_URL ? [process.env.WEB_URL] : []),
+];
+
 app.use(
   '*',
   cors({
-    origin: process.env.WEB_URL ?? 'http://localhost:3000',
+    origin: (origin) => (ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]),
     allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
-app.get('/', (c) => c.json({ message: 'AceMate API is running', version: 'v1' }));
+// Railway health probe (must be at /health, no prefix)
+app.get('/health',        (c) => c.json({ status: 'ok', timestamp: new Date().toISOString() }));
+app.get('/',              (c) => c.json({ message: 'AceMate API is running', version: 'v1' }));
 app.get('/api/v1/health', (c) => c.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
 app.route('/api/v1/profiles',    profiles);
