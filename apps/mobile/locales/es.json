@@ -1,0 +1,259 @@
+{
+  "auth": {
+    "signin": {
+      "title": "Inicia sesión en AceMate",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión…",
+      "noAccount": "¿No tienes cuenta?",
+      "signupLink": "Regístrate",
+      "error": "Correo o contraseña incorrectos. Inténtalo de nuevo."
+    },
+    "signup": {
+      "title": "Crea tu cuenta",
+      "username": "Nombre de usuario",
+      "fullName": "Nombre completo",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "passwordHint": "Mínimo 6 caracteres",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta…",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signinLink": "Inicia sesión",
+      "confirmEmail": "¡Cuenta creada! Revisa tu correo para confirmar antes de iniciar sesión.",
+      "error": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "onboarding": {
+    "steps": {
+      "aboutYou": "Sobre ti",
+      "yourGame": "Tu juego",
+      "location": "Ubicación"
+    },
+    "buttons": {
+      "next": "Continuar",
+      "back": "Atrás",
+      "finish": "Completar configuración",
+      "finishing": "Guardando…",
+      "skip": "Omitir por ahora"
+    },
+    "step1": {
+      "title": "Sobre ti",
+      "subtitle": "Personaliza tu perfil",
+      "avatar": "Foto de perfil",
+      "avatarChange": "Cambiar foto",
+      "avatarUploading": "Subiendo…",
+      "avatarError": "Error al subir — inténtalo de nuevo",
+      "fullName": "Nombre completo",
+      "username": "Nombre de usuario",
+      "usernameHint": "Solo letras, números y guiones bajos",
+      "usernameTooShort": "Mínimo 3 caracteres",
+      "usernameChecking": "Verificando…",
+      "usernameAvailable": "Nombre de usuario disponible",
+      "usernameTaken": "Este nombre de usuario ya está en uso"
+    },
+    "step2": {
+      "title": "Tu juego",
+      "subtitle": "Cuéntanos sobre tu estilo de juego",
+      "levelLabel": "Nivel de habilidad",
+      "beginner": "Principiante",
+      "beginnerDesc": "Recién comenzando",
+      "intermediate": "Intermedio",
+      "intermediateDesc": "Jugando regularmente",
+      "advanced": "Avanzado",
+      "advancedDesc": "Compitiendo localmente",
+      "competitive": "Competitivo",
+      "competitiveDesc": "Jugador de torneos",
+      "handLabel": "Mano dominante",
+      "left": "Izquierda",
+      "right": "Derecha",
+      "surfaceLabel": "Superficie preferida",
+      "clay": "Arcilla",
+      "hard": "Dura",
+      "grass": "Hierba",
+      "indoor": "Indoor"
+    },
+    "step3": {
+      "title": "Tu ubicación",
+      "subtitle": "Encuentra jugadores cerca de ti",
+      "description": "Compartir tu ubicación te permite aparecer en búsquedas de jugadores cercanos. Puedes actualizarla desde tu perfil en cualquier momento.",
+      "allowButton": "Compartir mi ubicación",
+      "detecting": "Detectando…",
+      "detected": "Ubicación detectada",
+      "permissionDenied": "Permiso denegado. Puedes habilitarlo desde la configuración de tu dispositivo.",
+      "genericError": "No se pudo detectar la ubicación. Inténtalo de nuevo.",
+      "coords": "Lat %{lat}, Lon %{lon}",
+      "noLocationWarning": "Sin ubicación no aparecerás en búsquedas de jugadores cercanos.",
+      "privacyNotice": "Tu ubicación exacta nunca se comparte. Otros jugadores solo verán tu área aproximada (±1km)."
+    }
+  },
+  "dashboard": {
+    "empty": {
+      "title": "¡Bienvenido a AceMate, %{name}!",
+      "subtitle": "Tu camino en el tenis empieza aquí",
+      "description": "Registra tu primer partido para comenzar a construir tu historial.",
+      "cta": "Registrar mi primer partido"
+    },
+    "stats": {
+      "totalMatches": "Partidos",
+      "wins": "Victorias",
+      "streak": "Racha"
+    },
+    "feed": {
+      "title": "Partidos recientes",
+      "empty": "Aún no tienes partidos"
+    },
+    "matchCard": {
+      "won": "Ganado",
+      "lost": "Perdido",
+      "pending": "Pendiente",
+      "guest": "Invitado",
+      "doubles": "Dobles",
+      "ace": "¡Ace!",
+      "surface": {
+        "clay": "Arcilla",
+        "hard": "Dura",
+        "grass": "Hierba",
+        "indoor": "Indoor"
+      }
+    }
+  },
+  "players": {
+    "title": "Buscar jugadores",
+    "searchPlaceholder": "Busca por nombre o usuario…",
+    "searchPrompt": "Busca jugadores para conectar.",
+    "noResults": "No se encontraron jugadores",
+    "level": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado",
+      "competitive": "Competitivo"
+    }
+  },
+  "friends": {
+    "title": "Amigos",
+    "tabs": {
+      "friends": "Amigos",
+      "received": "Solicitudes",
+      "sent": "Enviadas"
+    },
+    "noFriends": "Aún no tienes amigos. ¡Encuentra jugadores!",
+    "noPending": "Sin solicitudes pendientes",
+    "noSent": "Sin solicitudes enviadas"
+  },
+  "friendship": {
+    "add": "Agregar amigo",
+    "pending": "Pendiente",
+    "friends": "Amigos",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "cancel": "Cancelar",
+    "remove": "Eliminar"
+  },
+  "profile": {
+    "edit": {
+      "title": "Editar perfil",
+      "fullName": "Nombre completo",
+      "username": "Nombre de usuario",
+      "bio": "Bio",
+      "bioPlaceholder": "Cuéntale a otros jugadores sobre ti…",
+      "level": "Nivel de habilidad",
+      "hand": "Mano dominante",
+      "surface": "Superficie preferida",
+      "currentCity": "Área actual",
+      "noCity": "Sin ubicación configurada",
+      "updateLocation": "Actualizar ubicación",
+      "detecting": "Detectando…",
+      "privacyNotice": "Tu ubicación exacta nunca se comparte. Otros jugadores solo verán tu área aproximada (±1km).",
+      "save": "Guardar cambios",
+      "saving": "Guardando…",
+      "saved": "¡Perfil actualizado!",
+      "avatarChange": "Cambiar foto",
+      "avatarUploading": "Subiendo…",
+      "locationDenied": "Permiso de ubicación denegado. Habilítalo en la configuración de tu dispositivo.",
+      "locationError": "No se pudo obtener tu ubicación. Inténtalo de nuevo."
+    },
+    "stats": {
+      "matches": "Partidos",
+      "wins": "Victorias",
+      "losses": "Derrotas",
+      "winRate": "% victorias",
+      "streak": "Racha"
+    },
+    "history": {
+      "title": "Historial de partidos",
+      "loadMore": "Cargar más",
+      "loading": "Cargando…",
+      "won": "Ganado",
+      "lost": "Perdido",
+      "undecided": "Sin resultado",
+      "vs": "vs.",
+      "guest": "Invitado",
+      "noMatches": "Sin partidos todavía",
+      "friendsOnly": "Agrega a %{name} como amigo para ver su historial completo."
+    }
+  },
+  "newMatch": {
+    "title": "Registrar partido",
+    "cancel": "Cancelar",
+    "submit": "Registrar partido",
+    "submitting": "Registrando…",
+    "surface": "Superficie",
+    "playedAt": "Fecha y hora",
+    "notes": "Notas (opcional)",
+    "matchType": {
+      "label": "Tipo de partido",
+      "singles": "Singles",
+      "doubles": "Dobles"
+    },
+    "partner": {
+      "label": "Tu compañero/a"
+    },
+    "opponent": {
+      "label": "Oponente",
+      "labelDoubles1": "Rivales — Jugador 1",
+      "labelDoubles2": "Rivales — Jugador 2",
+      "searchPlaceholder": "Buscar por usuario o nombre…",
+      "switchToGuest": "Agregar como invitado",
+      "switchToSearch": "Buscar jugadores registrados",
+      "guestLabel": "Invitado",
+      "guestName": "Nombre",
+      "guestEmail": "Correo electrónico (opcional)",
+      "selected": "%{name} seleccionado"
+    },
+    "sets": {
+      "label": "Marcador",
+      "you": "Tú",
+      "opponent": "Riv.",
+      "myTeam": "Mi equipo",
+      "theirTeam": "Su equipo",
+      "set": "Set %{n}",
+      "addSet": "+ Agregar set",
+      "remove": "Eliminar"
+    },
+    "venue": {
+      "label": "Cancha / Club (opcional)",
+      "searchPlaceholder": "Busca o escribe para crear…",
+      "addNew": "Agregar \"%{name}\"",
+      "creating": "Creando…",
+      "yours": "tuya"
+    },
+    "winner": {
+      "label": "Ganador",
+      "me": "Gané yo",
+      "opponent": "Ganó el rival",
+      "myTeam": "Ganó mi equipo",
+      "theirTeam": "Ganó el equipo rival",
+      "none": "Sin decidir"
+    },
+    "successTitle": "¡Partido registrado!",
+    "successSubtitle": "Tu partido ha sido guardado.",
+    "nudge": {
+      "prompt": "¿Quieres agregar a %{name} como amigo?",
+      "addFriend": "Agregar amigo",
+      "maybeLater": "Quizás luego",
+      "sent": "Solicitud enviada ✓"
+    }
+  }
+}

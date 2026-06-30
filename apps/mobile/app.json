@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "AceMate",
+    "slug": "acemate-mobile",
+    "version": "1.0.0",
+    "scheme": "acemate",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#111111"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.acemate.mobile"
+    },
+    "android": {
+      "package": "com.acemate.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#111111"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "AceMate uses your photos to set your profile picture."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "AceMate uses your location to help you find nearby players."
+        }
+      ],
+      "expo-localization"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
