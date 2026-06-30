@@ -5,16 +5,16 @@ import { useTranslations } from 'next-intl';
 import { supabase } from '@/lib/supabase';
 
 interface StepOneData {
-  fullName: string;
-  username: string;
+  fullName:  string;
+  username:  string;
   avatarUrl: string;
 }
 
 interface Props {
-  data: StepOneData;
-  userId: string;
+  data:     StepOneData;
+  userId:   string;
   onChange: (fields: Partial<StepOneData>) => void;
-  onNext: () => void;
+  onNext:   () => void;
 }
 
 type UsernameStatus = 'idle' | 'too_short' | 'checking' | 'available' | 'taken';
@@ -26,27 +26,17 @@ export default function StepOne({ data, userId, onChange, onNext }: Props) {
   const tb = useTranslations('onboarding.buttons');
 
   const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
-  const [avatarPreview, setAvatarPreview]   = useState<string | null>(data.avatarUrl || null);
-  const [uploading, setUploading]           = useState(false);
-  const [avatarError, setAvatarError]       = useState(false);
+  const [avatarPreview,  setAvatarPreview]  = useState<string | null>(data.avatarUrl || null);
+  const [uploading,      setUploading]      = useState(false);
+  const [avatarError,    setAvatarError]    = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Debounced username uniqueness check — uses excludeId so the user's own existing
-  // username (created by the DB trigger at signup) shows as "available"
   useEffect(() => {
     const username = data.username;
-
-    if (!username) {
-      setUsernameStatus('idle');
-      return;
-    }
-    if (username.length < 3) {
-      setUsernameStatus('too_short');
-      return;
-    }
+    if (!username)           { setUsernameStatus('idle');      return; }
+    if (username.length < 3) { setUsernameStatus('too_short'); return; }
 
     setUsernameStatus('checking');
-
     const timer = setTimeout(async () => {
       try {
         const url = `${API}/api/v1/profiles/username-check?username=${encodeURIComponent(username)}&excludeId=${userId}`;
@@ -57,17 +47,14 @@ export default function StepOne({ data, userId, onChange, onNext }: Props) {
         setUsernameStatus('idle');
       }
     }, 400);
-
     return () => clearTimeout(timer);
   }, [data.username, userId]);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setAvatarError(false);
 
-    // Local preview immediately, upload in background
     const preview = URL.createObjectURL(file);
     setAvatarPreview(preview);
     setUploading(true);
@@ -76,13 +63,9 @@ export default function StepOne({ data, userId, onChange, onNext }: Props) {
       const ext  = file.name.split('.').pop() ?? 'jpg';
       const path = `${userId}/avatar.${ext}`;
 
-      // Requires an "avatars" bucket in Supabase Storage with:
-      //   - Public read access
-      //   - INSERT/UPDATE policy: auth.uid()::text = (storage.foldername(name))[1]
       const { error } = await supabase.storage
         .from('avatars')
         .upload(path, file, { upsert: true, contentType: file.type });
-
       if (error) throw error;
 
       const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path);
@@ -95,16 +78,13 @@ export default function StepOne({ data, userId, onChange, onNext }: Props) {
     }
   }
 
-  const canProceed =
-    data.fullName.trim().length > 0 &&
-    usernameStatus === 'available' &&
-    !uploading;
+  const canProceed = data.fullName.trim().length > 0 && usernameStatus === 'available' && !uploading;
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-gray-800">{t('title')}</h2>
-        <p className="mt-1 text-sm text-gray-500">{t('subtitle')}</p>
+        <h2 className="text-xl font-bold text-white">{t('title')}</h2>
+        <p className="mt-1 text-sm text-white/50">{t('subtitle')}</p>
       </div>
 
       {/* Avatar */}
@@ -112,44 +92,31 @@ export default function StepOne({ data, userId, onChange, onNext }: Props) {
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          className="relative w-24 h-24 rounded-full bg-green-100 border-2 border-green-200 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-ace-green/20 border-2 border-ace-green/40 focus:outline-none focus:ring-2 focus:ring-ace-green focus:ring-offset-2 focus:ring-offset-am-surface"
         >
-          {avatarPreview ? (
-            <img src={avatarPreview} alt="avatar preview" className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-4xl select-none">🎾</span>
-          )}
+          {avatarPreview
+            ? <img src={avatarPreview} alt="avatar preview" className="h-full w-full object-cover" />
+            : <span className="text-4xl font-bold text-ace-green select-none">🎾</span>}
           {uploading && (
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-ace-green border-t-transparent" />
             </div>
           )}
         </button>
-
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          className="text-sm font-medium text-green-700 hover:underline"
+          className="text-sm font-semibold text-ace-green hover:underline"
         >
           {uploading ? t('avatarUploading') : t('avatarChange')}
         </button>
-
-        {avatarError && (
-          <p className="text-xs text-red-500">{t('avatarError')}</p>
-        )}
-
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleFileChange}
-        />
+        {avatarError && <p className="text-xs text-red-400">{t('avatarError')}</p>}
+        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
       </div>
 
       {/* Full name */}
       <div>
-        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1.5">
+        <label htmlFor="fullName" className="mb-1.5 block text-sm font-medium text-white/60">
           {t('fullName')}
         </label>
         <input
@@ -157,14 +124,14 @@ export default function StepOne({ data, userId, onChange, onNext }: Props) {
           type="text"
           required
           value={data.fullName}
-          onChange={(e) => onChange({ fullName: e.target.value })}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+          onChange={e => onChange({ fullName: e.target.value })}
+          className="w-full rounded-lg border border-am-border bg-am-card px-4 py-2.5 text-white placeholder-white/30 focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
         />
       </div>
 
       {/* Username */}
       <div>
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
+        <label htmlFor="username" className="mb-1.5 block text-sm font-medium text-white/60">
           {t('username')}
         </label>
         <div className="relative">
@@ -173,36 +140,30 @@ export default function StepOne({ data, userId, onChange, onNext }: Props) {
             type="text"
             required
             value={data.username}
-            onChange={(e) =>
-              onChange({ username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })
-            }
-            className={`w-full rounded-lg border px-4 py-2.5 pr-10 text-gray-900 focus:outline-none focus:ring-1 transition-colors ${
+            onChange={e => onChange({ username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })}
+            className={`w-full rounded-lg border px-4 py-2.5 pr-10 text-white placeholder-white/30 focus:outline-none focus:ring-1 transition-colors bg-am-card ${
               usernameStatus === 'taken'
-                ? 'border-red-400 focus:border-red-400 focus:ring-red-400'
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                 : usernameStatus === 'available'
-                  ? 'border-green-500 focus:border-green-500 focus:ring-green-500'
-                  : 'border-gray-300 focus:border-green-500 focus:ring-green-500'
+                  ? 'border-ace-green focus:border-ace-green focus:ring-ace-green'
+                  : 'border-am-border focus:border-ace-green focus:ring-ace-green'
             }`}
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            {usernameStatus === 'checking' && (
-              <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-            )}
-            {usernameStatus === 'available' && <span className="text-green-600 font-bold">✓</span>}
-            {usernameStatus === 'taken'     && <span className="text-red-500 font-bold">✗</span>}
+            {usernameStatus === 'checking'  && <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white/80" />}
+            {usernameStatus === 'available' && <span className="font-bold text-ace-green">✓</span>}
+            {usernameStatus === 'taken'     && <span className="font-bold text-red-400">✗</span>}
           </div>
         </div>
-
         <p className={`mt-1.5 text-xs ${
-          usernameStatus === 'taken'     ? 'text-red-500'   :
-          usernameStatus === 'available' ? 'text-green-600' :
-          usernameStatus === 'too_short' ? 'text-gray-400'  :
-          'text-gray-400'
+          usernameStatus === 'taken'     ? 'text-red-400'   :
+          usernameStatus === 'available' ? 'text-ace-green' :
+                                          'text-white/30'
         }`}>
           {usernameStatus === 'taken'     ? t('usernameTaken')     :
            usernameStatus === 'available' ? t('usernameAvailable') :
            usernameStatus === 'too_short' ? t('usernameTooShort')  :
-           usernameStatus === 'checking' ? t('usernameChecking')   :
+           usernameStatus === 'checking'  ? t('usernameChecking')  :
            t('usernameHint')}
         </p>
       </div>
@@ -212,7 +173,7 @@ export default function StepOne({ data, userId, onChange, onNext }: Props) {
           type="button"
           disabled={!canProceed}
           onClick={onNext}
-          className="rounded-lg bg-green-700 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-800 disabled:cursor-not-allowed disabled:bg-green-300"
+          className="rounded-lg bg-ace-green px-6 py-2.5 text-sm font-bold text-[#1a1a1a] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {tb('next')}
         </button>

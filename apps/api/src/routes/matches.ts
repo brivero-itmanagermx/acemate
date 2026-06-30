@@ -12,7 +12,10 @@ matches.get('/', async (c) => {
   const { data: rows, error } = await supabase
     .from('matches')
     .select('*')
-    .or(`player_home_id.eq.${userId},player_away_id.eq.${userId}`)
+    .or(
+      `player_home_id.eq.${userId},player_away_id.eq.${userId},` +
+      `player_home2_id.eq.${userId},player_away2_id.eq.${userId}`
+    )
     .is('deleted_at', null)
     .order('played_at', { ascending: false })
     .limit(20);
@@ -21,7 +24,12 @@ matches.get('/', async (c) => {
   if (!rows?.length) return c.json([]);
 
   const playerIds = [
-    ...new Set(rows.flatMap(m => [m.player_home_id, m.player_away_id].filter(Boolean)))
+    ...new Set(rows.flatMap(m => [
+      m.player_home_id,
+      m.player_home2_id,
+      m.player_away_id,
+      m.player_away2_id,
+    ].filter(Boolean)))
   ] as string[];
 
   const matchIds = rows.map(m => m.id);
@@ -45,8 +53,10 @@ matches.get('/', async (c) => {
 
   return c.json(rows.map(m => ({
     ...m,
-    homePlayer:  profileMap[m.player_home_id] ?? null,
-    awayPlayer:  m.player_away_id ? (profileMap[m.player_away_id] ?? null) : null,
+    homePlayer:  profileMap[m.player_home_id]  ?? null,
+    homePlayer2: m.player_home2_id ? (profileMap[m.player_home2_id] ?? null) : null,
+    awayPlayer:  m.player_away_id  ? (profileMap[m.player_away_id]  ?? null) : null,
+    awayPlayer2: m.player_away2_id ? (profileMap[m.player_away2_id] ?? null) : null,
     aceCount:    reactionMap[m.id]?.length ?? 0,
     userHasAced: reactionMap[m.id]?.includes(requesterId!) ?? false,
   })));
@@ -54,25 +64,46 @@ matches.get('/', async (c) => {
 
 matches.post('/', async (c) => {
   const body = await c.req.json<{
-    player_home_id:  string;
-    player_away_id?: string | null;
-    opponent_name?:  string | null;
-    opponent_email?: string | null;
-    sets:            { home: number; away: number }[];
-    surface?:        string | null;
-    venue_id?:       string | null;
-    location_name?:  string | null;  // accepted for backward compat; overridden by venue_id
-    played_at:       string;
-    winner?:         'home' | 'away' | null;
-    notes?:          string | null;
+    match_type?:      'singles' | 'doubles';
+    player_home_id:   string;
+    player_home2_id?: string | null;
+    partner_name?:    string | null;
+    partner_email?:   string | null;
+    player_away_id?:  string | null;
+    player_away2_id?: string | null;
+    opponent_name?:   string | null;
+    opponent_email?:  string | null;
+    opponent2_name?:  string | null;
+    opponent2_email?: string | null;
+    sets:             { home: number; away: number }[];
+    surface?:         string | null;
+    venue_id?:        string | null;
+    location_name?:   string | null;
+    played_at:        string;
+    winner?:          'home' | 'away' | null;
+    notes?:           string | null;
   }>();
 
+  const matchType = body.match_type ?? 'singles';
+
   if (!body.player_home_id) return c.json({ error: 'player_home_id required' }, 400);
+
+  // Away team player 1 is always required
   if (!body.player_away_id && !body.opponent_name) {
     return c.json({ error: 'player_away_id or opponent_name required' }, 400);
   }
 
-  // Resolve venue: look up name to populate location_name for backward compat
+  // For doubles, home team partner is required
+  if (matchType === 'doubles' && !body.player_home2_id && !body.partner_name) {
+    return c.json({ error: 'player_home2_id or partner_name required for doubles' }, 400);
+  }
+
+  // For doubles, away team second player is required
+  if (matchType === 'doubles' && !body.player_away2_id && !body.opponent2_name) {
+    return c.json({ error: 'player_away2_id or opponent2_name required for doubles' }, 400);
+  }
+
+  // Resolve venue
   let venue_id:      string | null = body.venue_id ?? null;
   let location_name: string | null = body.location_name ?? null;
 
@@ -86,7 +117,7 @@ matches.post('/', async (c) => {
     if (venue) {
       location_name = venue.name;
     } else {
-      venue_id = null;  // venue not found or soft-deleted — ignore it
+      venue_id = null;
     }
   }
 
@@ -98,18 +129,25 @@ matches.post('/', async (c) => {
   const { data, error } = await supabase
     .from('matches')
     .insert({
+      match_type:      matchType,
       player_home_id:  body.player_home_id,
-      player_away_id:  body.player_away_id  ?? null,
-      opponent_name:   body.opponent_name   ?? null,
-      opponent_email:  body.opponent_email  ?? null,
-      sets:            body.sets            ?? [],
-      surface:         body.surface         ?? null,
+      player_home2_id: body.player_home2_id  ?? null,
+      partner_name:    body.partner_name      ?? null,
+      partner_email:   body.partner_email     ?? null,
+      player_away_id:  body.player_away_id    ?? null,
+      player_away2_id: body.player_away2_id   ?? null,
+      opponent_name:   body.opponent_name     ?? null,
+      opponent_email:  body.opponent_email    ?? null,
+      opponent2_name:  body.opponent2_name    ?? null,
+      opponent2_email: body.opponent2_email   ?? null,
+      sets:            body.sets              ?? [],
+      surface:         body.surface           ?? null,
       venue_id,
       location_name,
       played_at:       body.played_at,
       winner_id,
       status:          winner_id != null ? 'confirmed' : 'pending',
-      notes:           body.notes           ?? null,
+      notes:           body.notes             ?? null,
     })
     .select()
     .single();

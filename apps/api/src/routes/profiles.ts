@@ -180,7 +180,10 @@ profiles.get('/:id/matches', async (c) => {
   const { data: rows, count, error } = await supabase
     .from('matches')
     .select('*', { count: 'exact' })
-    .or(`player_home_id.eq.${id},player_away_id.eq.${id}`)
+    .or(
+      `player_home_id.eq.${id},player_away_id.eq.${id},` +
+      `player_home2_id.eq.${id},player_away2_id.eq.${id}`
+    )
     .neq('status', 'cancelled')
     .is('deleted_at', null)
     .order('played_at', { ascending: false })
@@ -189,35 +192,55 @@ profiles.get('/:id/matches', async (c) => {
   if (error) return c.json({ error: error.message }, 500);
   if (!rows?.length) return c.json({ items: [], total: 0, page, limit, fullAccess });
 
-  const opponentIds = [...new Set(
-    rows.flatMap(m => {
-      const oppId = m.player_home_id === id ? m.player_away_id : m.player_home_id;
-      return oppId ? [oppId] : [];
-    })
+  // Collect all registered player IDs from both teams (including doubles partners)
+  const extraIds = [...new Set(
+    rows.flatMap(m => [
+      m.player_home_id !== id  ? m.player_home_id  : null,
+      m.player_home2_id !== id ? m.player_home2_id : null,
+      m.player_away_id !== id  ? m.player_away_id  : null,
+      m.player_away2_id !== id ? m.player_away2_id : null,
+    ].filter(Boolean))
   )] as string[];
 
-  const { data: opponentProfiles } = opponentIds.length
-    ? await supabase.from('profiles').select('id, username, full_name, avatar_url').in('id', opponentIds)
+  const { data: extraProfiles } = extraIds.length
+    ? await supabase.from('profiles').select('id, username, full_name, avatar_url').in('id', extraIds)
     : { data: [] };
 
-  const profileMap = Object.fromEntries((opponentProfiles ?? []).map(p => [p.id, p]));
+  const profileMap = Object.fromEntries((extraProfiles ?? []).map(p => [p.id, p]));
 
   const items = rows.map(m => {
-    const isHome   = m.player_home_id === id;
-    const oppId    = isHome ? m.player_away_id : m.player_home_id;
-    const opponent = oppId ? (profileMap[oppId] ?? null) : null;
+    const isHome = m.player_home_id === id || m.player_home2_id === id;
+
+    // Opponent team: the 2 slots on the opposite side
+    const opp1Id    = isHome ? m.player_away_id  : m.player_home_id;
+    const opp2Id    = isHome ? m.player_away2_id : m.player_home2_id;
+    const partner1Id = isHome ? (m.player_home_id === id ? m.player_home2_id : m.player_home_id) : null;
+
+    // For doubles, include the viewer's own partner
+    const partnerId = m.match_type === 'doubles' && partner1Id !== id ? partner1Id : null;
+
+    const playedTogether = !!requesterId && (
+      opp1Id === requesterId ||
+      opp2Id === requesterId ||
+      partnerId === requesterId
+    );
 
     return {
-      id:              m.id,
-      played_at:       m.played_at,
-      surface:         m.surface,
-      winner_id:       m.winner_id,
-      sets:            fullAccess ? (m.sets ?? []) : [],
-      location_name:   m.location_name,
-      is_home:         isHome,
-      opponent,
-      opponent_name:   isHome ? (m.opponent_name ?? null) : null,
-      played_together: !!requesterId && !!oppId && oppId === requesterId,
+      id:             m.id,
+      match_type:     m.match_type ?? 'singles',
+      played_at:      m.played_at,
+      surface:        m.surface,
+      winner_id:      m.winner_id,
+      sets:           fullAccess ? (m.sets ?? []) : [],
+      location_name:  m.location_name,
+      is_home:        isHome,
+      opponent:       opp1Id ? (profileMap[opp1Id] ?? null) : null,
+      opponent_name:  isHome ? (m.opponent_name ?? null) : null,
+      opponent2:      opp2Id ? (profileMap[opp2Id] ?? null) : null,
+      opponent2_name: isHome ? (m.opponent2_name ?? null) : (m.partner_name ?? null),
+      partner:        partnerId ? (profileMap[partnerId] ?? null) : null,
+      partner_name:   isHome ? (m.player_home2_id ? null : (m.partner_name ?? null)) : null,
+      played_together: playedTogether,
     };
   });
 

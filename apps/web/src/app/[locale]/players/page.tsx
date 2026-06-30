@@ -53,33 +53,29 @@ export default function PlayersPage() {
 
   function handleFriendshipChange(playerId: string, status: FriendshipStatusUI, id: string | null) {
     setResults(prev =>
-      prev.map(p =>
-        p.id !== playerId ? p : { ...p, friendshipStatus: status, friendshipId: id }
-      )
+      prev.map(p => p.id !== playerId ? p : { ...p, friendshipStatus: status, friendshipId: id })
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-am-bg">
       <Navbar />
-      <main className="mx-auto max-w-2xl px-4 py-6">
-        <h1 className="mb-6 text-2xl font-bold text-gray-900">{t('title')}</h1>
+      <main className="mx-auto max-w-2xl px-4 py-8">
+        <h1 className="mb-6 text-2xl font-bold text-white">{t('title')}</h1>
 
-        {/* Search input */}
         <div className="relative mb-6">
           <input
             type="text"
             placeholder={t('searchPlaceholder')}
             value={query}
             onChange={e => setQuery(e.target.value)}
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            className="w-full rounded-xl border border-am-border bg-am-surface px-4 py-3 text-sm text-white placeholder-white/30 focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
           />
           {loading && (
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-ace-green" />
           )}
         </div>
 
-        {/* Results */}
         {userId && (
           <div className="space-y-3">
             {results.map(player => (
@@ -91,12 +87,12 @@ export default function PlayersPage() {
               />
             ))}
             {query.trim() && !loading && results.length === 0 && (
-              <p className="py-8 text-center text-sm text-gray-400">{t('noResults')}</p>
+              <p className="py-8 text-center text-sm text-white/30">{t('noResults')}</p>
             )}
             {!query.trim() && (
               <div className="py-16 text-center">
                 <div className="mb-3 text-4xl">🔍</div>
-                <p className="text-sm text-gray-400">{t('searchPrompt')}</p>
+                <p className="text-sm text-white/40">{t('searchPrompt')}</p>
               </div>
             )}
           </div>

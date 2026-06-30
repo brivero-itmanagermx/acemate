@@ -40,16 +40,16 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-20 border-b border-gray-100 bg-white shadow-sm">
+    <nav className="sticky top-0 z-20 border-b border-am-border bg-am-bg" style={{ borderBottomWidth: '0.5px' }}>
       <div className="mx-auto flex max-w-5xl items-center gap-4 px-4 py-3">
         {/* Logo */}
         <Link href="/dashboard" className="flex shrink-0 items-center gap-2">
           <span className="text-xl">🎾</span>
-          <span className="hidden font-bold text-gray-900 sm:inline">AceMate</span>
+          <span className="hidden font-bold text-white sm:inline">AceMate</span>
         </Link>
 
         {/* Nav links */}
-        <div className="flex flex-1 items-center gap-1">
+        <div className="flex flex-1 items-center gap-0.5">
           {([
             { href: '/dashboard', label: t('dashboard') },
             { href: '/players',   label: t('players')   },
@@ -59,8 +59,8 @@ export default function Navbar() {
               href={href}
               className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 isActive(href)
-                  ? 'bg-green-50 text-green-700'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-ace-green/12 text-ace-green'
+                  : 'text-white/55 hover:bg-white/6 hover:text-white/90'
               }`}
             >
               {label}
@@ -72,29 +72,29 @@ export default function Navbar() {
             href="/friends"
             className={`relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
               isActive('/friends')
-                ? 'bg-green-50 text-green-700'
-                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                ? 'bg-ace-green/12 text-ace-green'
+                : 'text-white/55 hover:bg-white/6 hover:text-white/90'
             }`}
           >
             {t('friends')}
             {pendingCount > 0 && (
-              <span className="flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-green-600 px-1 text-[10px] font-bold text-white">
+              <span className="flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-rally-orange px-1 text-[10px] font-bold text-white">
                 {pendingCount > 9 ? '9+' : pendingCount}
               </span>
             )}
           </Link>
         </div>
 
-        {/* Right: avatar (links to profile edit) + sign out */}
+        {/* Right: avatar + sign out */}
         <div className="flex shrink-0 items-center gap-3">
           <Link
             href="/profile/edit"
-            className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-gray-100 transition-opacity hover:opacity-80"
+            className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-ace-green/20 text-sm transition-opacity hover:opacity-80"
             title="Edit profile"
           >
             {avatarUrl
               ? <img src={avatarUrl} className="h-full w-full object-cover" alt="" />
-              : <span className="text-sm">👤</span>}
+              : <span>👤</span>}
           </Link>
           <SignOutButton />
         </div>

@@ -11,12 +11,12 @@ export default function SignUpPage() {
   const t = useTranslations('auth.signup');
   const router = useRouter();
 
-  const [fields, setFields] = useState({ username: '', fullName: '', email: '', password: '' });
+  const [fields,   setFields]   = useState({ username: '', fullName: '', email: '', password: '' });
   const [feedback, setFeedback] = useState<Feedback | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading,  setLoading]  = useState(false);
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFields(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -29,7 +29,7 @@ export default function SignUpPage() {
       password: fields.password,
       options: {
         data: {
-          username: fields.username.toLowerCase().trim(),
+          username:  fields.username.toLowerCase().trim(),
           full_name: fields.fullName.trim(),
         },
       },
@@ -43,35 +43,31 @@ export default function SignUpPage() {
     }
 
     if (!data.session) {
-      // Supabase requires email confirmation — user is not immediately signed in
       setFeedback({ kind: 'info', message: t('confirmEmail') });
       return;
     }
 
-    // Email confirmation disabled — user is immediately authenticated
     router.push('/onboarding');
   }
 
   return (
-    <main className="min-h-screen bg-green-50 flex items-center justify-center p-4">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-am-bg px-4 py-10">
       <div className="w-full max-w-md">
 
-        <div className="text-center mb-8">
+        <div className="mb-8 text-center">
           <span className="text-5xl">🎾</span>
-          <h1 className="text-3xl font-bold text-gray-900 mt-3">AceMate</h1>
+          <h1 className="mt-3 text-3xl font-extrabold text-white">AceMate</h1>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-6">{t('title')}</h2>
+        <div className="rounded-2xl border border-am-border bg-am-surface p-8">
+          <h2 className="mb-6 text-xl font-bold text-white">{t('title')}</h2>
 
           {feedback && (
-            <div
-              className={`mb-5 rounded-lg border px-4 py-3 text-sm ${
-                feedback.kind === 'error'
-                  ? 'bg-red-50 border-red-200 text-red-700'
-                  : 'bg-green-50 border-green-200 text-green-800'
-              }`}
-            >
+            <div className={`mb-5 rounded-lg border px-4 py-3 text-sm ${
+              feedback.kind === 'error'
+                ? 'border-red-500/30 bg-red-500/10 text-red-400'
+                : 'border-ace-green/30 bg-ace-green/10 text-ace-green'
+            }`}>
               {feedback.message}
             </div>
           )}
@@ -79,7 +75,7 @@ export default function SignUpPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label htmlFor="username" className="mb-1.5 block text-sm font-medium text-white/60">
                   {t('username')}
                 </label>
                 <input
@@ -90,11 +86,11 @@ export default function SignUpPage() {
                   autoComplete="username"
                   value={fields.username}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 transition focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                  className="w-full rounded-lg border border-am-border bg-am-card px-4 py-2.5 text-white placeholder-white/30 transition focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
                 />
               </div>
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label htmlFor="fullName" className="mb-1.5 block text-sm font-medium text-white/60">
                   {t('fullName')}
                 </label>
                 <input
@@ -105,13 +101,13 @@ export default function SignUpPage() {
                   autoComplete="name"
                   value={fields.fullName}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 transition focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                  className="w-full rounded-lg border border-am-border bg-am-card px-4 py-2.5 text-white placeholder-white/30 transition focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-white/60">
                 {t('email')}
               </label>
               <input
@@ -122,12 +118,12 @@ export default function SignUpPage() {
                 autoComplete="email"
                 value={fields.email}
                 onChange={onChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 transition focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="w-full rounded-lg border border-am-border bg-am-card px-4 py-2.5 text-white placeholder-white/30 transition focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-white/60">
                 {t('password')}
               </label>
               <input
@@ -139,23 +135,23 @@ export default function SignUpPage() {
                 minLength={6}
                 value={fields.password}
                 onChange={onChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 transition focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="w-full rounded-lg border border-am-border bg-am-card px-4 py-2.5 text-white placeholder-white/30 transition focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
               />
-              <p className="mt-1.5 text-xs text-gray-400">{t('passwordHint')}</p>
+              <p className="mt-1.5 text-xs text-white/30">{t('passwordHint')}</p>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 w-full rounded-lg bg-green-700 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-800 disabled:cursor-not-allowed disabled:bg-green-400"
+              className="mt-2 w-full rounded-lg bg-ace-green py-2.5 text-sm font-bold text-[#1a1a1a] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? t('submitting') : t('submit')}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-500">
+          <p className="mt-6 text-center text-sm text-white/40">
             {t('hasAccount')}{' '}
-            <Link href="/auth/signin" className="font-medium text-green-700 hover:underline">
+            <Link href="/auth/signin" className="font-semibold text-ace-green hover:underline">
               {t('signinLink')}
             </Link>
           </p>

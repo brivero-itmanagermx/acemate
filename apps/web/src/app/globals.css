@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --am-bg:           #111111;
+    --am-surface:      #222222;
+    --am-card:         #1a1a1a;
+    --am-border:       #333333;
+    --ace-green:       #C5F135;
+    --lime-light:      #EEFF88;
+    --rally-orange:    #FF7F2D;
+    --orange-light:    #FFB380;
+    --am-grass:        #4a8c3f;
+    --text-primary:    #ffffff;
+    --text-secondary:  rgba(255,255,255,0.6);
+    --text-muted:      rgba(255,255,255,0.35);
+  }
+
+  html, body {
+    background-color: #111111;
+    color: #ffffff;
+  }
+
+  /* Autofill fix — browsers inject white bg into dark inputs */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #222222 inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff;
+  }
+}

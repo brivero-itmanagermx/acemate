@@ -30,28 +30,24 @@ export default function OnboardingPage() {
   const [error,  setError]  = useState<string | null>(null);
 
   const [form, setForm] = useState<FormData>({
-    fullName: '',
-    username: '',
-    avatarUrl: '',
-    level: '',
-    dominantHand: '',
-    preferredSurface: '',
+    fullName: '', username: '', avatarUrl: '',
+    level: '', dominantHand: '', preferredSurface: '',
   });
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { router.replace('/auth/signin'); return; }
       setUserId(user.id);
-      setForm((prev) => ({
+      setForm(prev => ({
         ...prev,
-        fullName: user.user_metadata?.full_name  ?? '',
-        username: user.user_metadata?.username   ?? '',
+        fullName: user.user_metadata?.full_name ?? '',
+        username: user.user_metadata?.username  ?? '',
       }));
     });
   }, [router]);
 
   function update(fields: Partial<FormData>) {
-    setForm((prev) => ({ ...prev, ...fields }));
+    setForm(prev => ({ ...prev, ...fields }));
   }
 
   async function handleFinish(location: { latitude: number | null; longitude: number | null }) {
@@ -94,8 +90,8 @@ export default function OnboardingPage() {
 
   if (!userId) {
     return (
-      <div className="min-h-screen bg-green-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin" />
+      <div className="flex min-h-screen items-center justify-center bg-am-bg">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-ace-green border-t-transparent" />
       </div>
     );
   }
@@ -107,22 +103,20 @@ export default function OnboardingPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-green-50 flex flex-col items-center justify-center p-4 py-10">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-am-bg px-4 py-10">
       <div className="w-full max-w-2xl">
 
-        {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="mb-8 text-center">
           <span className="text-5xl">🎾</span>
-          <h1 className="text-3xl font-bold text-gray-900 mt-3">AceMate</h1>
+          <h1 className="mt-3 text-3xl font-extrabold text-white">AceMate</h1>
         </div>
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
+        <div className="rounded-2xl border border-am-border bg-am-surface">
           <StepIndicator current={step} labels={stepLabels} />
 
           <div className="p-8">
             {error && (
-              <div className="mb-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+              <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
                 {error}
               </div>
             )}
@@ -135,7 +129,6 @@ export default function OnboardingPage() {
                 onNext={() => setStep(2)}
               />
             )}
-
             {step === 2 && (
               <StepTwo
                 data={{ level: form.level, dominantHand: form.dominantHand, preferredSurface: form.preferredSurface }}
@@ -144,7 +137,6 @@ export default function OnboardingPage() {
                 onBack={() => setStep(1)}
               />
             )}
-
             {step === 3 && (
               <StepThree
                 saving={saving}

@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useParams }        from 'next/navigation';
-import { useTranslations }  from 'next-intl';
-import { Link }             from '@/i18n/navigation';
-import { supabase }         from '@/lib/supabase';
-import { useRouter }        from '@/i18n/navigation';
-import Navbar               from '@/components/Navbar';
-import FriendshipButton     from '@/components/FriendshipButton';
+import { useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { Link, useRouter } from '@/i18n/navigation';
+import { supabase } from '@/lib/supabase';
+import Navbar from '@/components/Navbar';
+import GrassHeader from '@/components/GrassHeader';
+import FriendshipButton from '@/components/FriendshipButton';
 import type {
   Profile,
   ProfileStats,
@@ -18,21 +18,23 @@ import type {
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-// ── Constants ────────────────────────────────────────────────────────────────
-
 const SURFACE_EMOJI: Record<string, string> = {
   clay: '🟤', hard: '🔵', grass: '🟢', indoor: '🏠',
 };
-
-const LEVEL_COLOR: Record<string, string> = {
-  beginner:     'bg-green-100 text-green-800',
-  intermediate: 'bg-blue-100 text-blue-800',
-  advanced:     'bg-purple-100 text-purple-800',
-  competitive:  'bg-orange-100 text-orange-800',
+const LEVEL_CHIP: Record<string, string> = {
+  beginner:     'border-blue-500/30  bg-blue-500/10  text-blue-400',
+  intermediate: 'border-ace-green/30 bg-ace-green/10 text-ace-green',
+  advanced:     'border-rally-orange/30 bg-rally-orange/10 text-rally-orange',
+  competitive:  'border-red-500/30   bg-red-500/10   text-red-400',
 };
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function initials(name: string | null | undefined): string {
+  if (!name) return '?';
+  return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -47,67 +49,50 @@ function ProfileMatchCard({ match, profileId, th }: MatchCardProps) {
   const iWon  = match.winner_id === profileId;
   const iLost = match.winner_id !== null && match.winner_id !== profileId;
 
-  const opponentDisplayName =
-    match.opponent?.full_name ?? match.opponent?.username ?? match.opponent_name ?? th('guest');
-
-  const myScore  = (s: { home: number; away: number }) => match.is_home ? s.home : s.away;
-  const oppScore = (s: { home: number; away: number }) => match.is_home ? s.away : s.home;
+  const opponentName = match.opponent?.full_name ?? match.opponent?.username ?? match.opponent_name;
+  const myScore    = (s: { home: number; away: number }) => match.is_home ? s.home : s.away;
+  const oppScore   = (s: { home: number; away: number }) => match.is_home ? s.away : s.home;
 
   return (
-    <div className="flex items-start gap-3 border-b border-gray-50 py-3.5 last:border-0">
-      {/* Surface */}
-      <span className="mt-0.5 text-xl">
-        {SURFACE_EMOJI[match.surface ?? ''] ?? '🎾'}
-      </span>
+    <div className="flex items-start gap-3 border-b border-am-border py-3.5 last:border-0" style={{ borderBottomWidth: '0.5px' }}>
+      <span className="mt-0.5 text-xl">{SURFACE_EMOJI[match.surface ?? ''] ?? '🎾'}</span>
 
-      {/* Opponent + score */}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           {match.opponent?.avatar_url && (
-            <img
-              src={match.opponent.avatar_url}
-              className="h-5 w-5 shrink-0 rounded-full object-cover"
-              alt=""
-            />
+            <img src={match.opponent.avatar_url} className="h-5 w-5 shrink-0 rounded-full object-cover" alt="" />
           )}
           {match.opponent ? (
             <Link
               href={`/players/${match.opponent.id}`}
-              className="truncate text-sm font-medium text-gray-800 hover:underline"
+              className="truncate text-sm font-medium text-white hover:underline"
             >
-              {th('vs')} {opponentDisplayName}
+              {opponentName}
             </Link>
           ) : (
-            <span className="truncate text-sm text-gray-600">
-              {th('vs')} {opponentDisplayName}
-            </span>
-          )}
-          {match.played_together && (
-            <span className="shrink-0 text-xs text-green-600" title={th('playedTogether')}>🎾</span>
+            <span className="text-sm text-white/60">{opponentName ?? th('unknownOpponent')}</span>
           )}
         </div>
 
         {match.sets.length > 0 && (
-          <p className="mt-0.5 text-xs text-gray-400">
-            {match.sets.map(s => `${myScore(s)}-${oppScore(s)}`).join('  ')}
+          <p className="mt-0.5 font-mono text-xs text-white/40">
+            {match.sets.map(s => `${myScore(s)}-${oppScore(s)}`).join(' ')}
           </p>
         )}
-
         {match.location_name && (
-          <p className="mt-0.5 truncate text-xs text-gray-400">📍 {match.location_name}</p>
+          <p className="mt-0.5 truncate text-xs text-white/30">📍 {match.location_name}</p>
         )}
       </div>
 
-      {/* Result + date */}
       <div className="shrink-0 text-right">
         <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${
-          iWon  ? 'bg-green-100 text-green-700' :
-          iLost ? 'bg-red-100 text-red-700' :
-          'bg-gray-100 text-gray-500'
+          iWon  ? 'bg-ace-green/15 text-ace-green'  :
+          iLost ? 'bg-red-500/10 text-red-400' :
+                  'bg-white/8 text-white/40'
         }`}>
           {iWon ? th('won') : iLost ? th('lost') : th('undecided')}
         </span>
-        <p className="mt-1 text-xs text-gray-400">{formatDate(match.played_at)}</p>
+        <p className="mt-1 text-xs text-white/30">{formatDate(match.played_at)}</p>
       </div>
     </div>
   );
@@ -118,15 +103,15 @@ function LimitedMatchCard({ match, profileId, th }: MatchCardProps) {
   const iLost = match.winner_id !== null && match.winner_id !== profileId;
 
   return (
-    <div className="flex items-center justify-between border-b border-gray-50 py-2.5 last:border-0">
+    <div className="flex items-center justify-between border-b border-am-border py-2.5 last:border-0" style={{ borderBottomWidth: '0.5px' }}>
       <div className="flex items-center gap-2">
         <span className="text-base">{SURFACE_EMOJI[match.surface ?? ''] ?? '🎾'}</span>
-        <span className="text-sm text-gray-500">{formatDate(match.played_at)}</span>
+        <span className="text-sm text-white/50">{formatDate(match.played_at)}</span>
       </div>
       <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-        iWon  ? 'bg-green-100 text-green-700' :
-        iLost ? 'bg-red-100 text-red-700' :
-        'bg-gray-100 text-gray-500'
+        iWon  ? 'bg-ace-green/15 text-ace-green' :
+        iLost ? 'bg-red-500/10 text-red-400' :
+                'bg-white/8 text-white/40'
       }`}>
         {iWon ? th('won') : iLost ? th('lost') : th('undecided')}
       </span>
@@ -134,47 +119,45 @@ function LimitedMatchCard({ match, profileId, th }: MatchCardProps) {
   );
 }
 
+function StatCell({ label, value, color = 'text-white' }: { label: string; value: string; color?: string }) {
+  return (
+    <div className="flex flex-col items-center px-3 py-2 first:pl-0 last:pr-0">
+      <span className={`text-xl font-extrabold ${color}`}>{value}</span>
+      <span className="mt-0.5 text-center text-[11px] text-white/35">{label}</span>
+    </div>
+  );
+}
+
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function PlayerProfilePage() {
-  const params   = useParams<{ playerId: string }>();
-  const playerId = params.playerId;
+  const params   = useParams();
+  const playerId = params.playerId as string;
   const router   = useRouter();
 
-  const t   = useTranslations('playerProfile');
-  const ti  = useTranslations('playerProfile.info');
+  const t   = useTranslations('playerProfile.info');
   const ts  = useTranslations('playerProfile.stats');
   const th  = useTranslations('playerProfile.history');
   const t2  = useTranslations('onboarding.step2');
+  const ti  = useTranslations('onboarding.step2');
 
-  // ── Auth / identity ────────────────────────────────────────────────────────
-  const [currentUserId,    setCurrentUserId]    = useState<string | null>(null);
+  const [currentUserId,    setCurrentUserId]    = useState<string>('');
   const [isSelf,           setIsSelf]           = useState(false);
+  const [profile,          setProfile]          = useState<Profile | null>(null);
+  const [notFound,         setNotFound]         = useState(false);
+  const [city,             setCity]             = useState<string | null>(null);
   const [friendshipStatus, setFriendshipStatus] = useState<FriendshipStatusUI>('none');
   const [friendshipId,     setFriendshipId]     = useState<string | null>(null);
+  const [stats,            setStats]            = useState<ProfileStats | null>(null);
+  const [matches,          setMatches]          = useState<ProfileMatchItem[]>([]);
+  const [matchTotal,       setMatchTotal]       = useState(0);
+  const [matchPage,        setMatchPage]        = useState(1);
+  const [fullAccess,       setFullAccess]       = useState(false);
+  const [moreLoading,      setMoreLoading]      = useState(false);
+  const [loading,          setLoading]          = useState(true);
 
-  // ── Profile data ───────────────────────────────────────────────────────────
-  const [profile,  setProfile]  = useState<Profile | null>(null);
-  const [city,     setCity]     = useState<string | null>(null);
-  const [stats,    setStats]    = useState<ProfileStats | null>(null);
-  const [notFound, setNotFound] = useState(false);
-
-  // ── Match history ──────────────────────────────────────────────────────────
-  const [matches,     setMatches]     = useState<ProfileMatchItem[]>([]);
-  const [matchTotal,  setMatchTotal]  = useState(0);
-  const [matchPage,   setMatchPage]   = useState(1);
-  const [fullAccess,  setFullAccess]  = useState(false);
-  const [moreLoading, setMoreLoading] = useState(false);
-
-  // ── General ────────────────────────────────────────────────────────────────
-  const [loading, setLoading] = useState(true);
-
-  // ── Derived ────────────────────────────────────────────────────────────────
-  const isFriend   = friendshipStatus === 'accepted';
-  // View mode determines what's shown
-  const viewMode   = isSelf ? 'self' : (isFriend ? 'friend' : 'stranger') as 'self' | 'friend' | 'stranger';
-
-  // ── Fetch helpers ──────────────────────────────────────────────────────────
+  const isFriend  = friendshipStatus === 'accepted';
+  const viewMode: 'self' | 'friend' | 'stranger' = isSelf ? 'self' : (isFriend ? 'friend' : 'stranger');
 
   const fetchMatches = useCallback(async (viewerId: string, page = 1, append = false) => {
     const res = await fetch(
@@ -188,10 +171,8 @@ export default function PlayerProfilePage() {
     setFullAccess(data.fullAccess);
   }, [playerId]);
 
-  // ── Initial load ───────────────────────────────────────────────────────────
-
   useEffect(() => {
-    const load = async () => {
+    async function load() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.replace('/auth/signin'); return; }
 
@@ -212,32 +193,25 @@ export default function PlayerProfilePage() {
 
       const [profileData, locationData, statsData] = await Promise.all([
         profileRes.json() as Promise<Profile>,
-        locationRes.ok ? (locationRes.json() as Promise<{ city: string | null }>) : Promise.resolve({ city: null }),
-        statsRes.ok    ? (statsRes.json() as Promise<ProfileStats>)                : Promise.resolve(null),
+        locationRes.ok ? locationRes.json() : Promise.resolve({ city: null }),
+        statsRes.ok    ? statsRes.json()    : Promise.resolve<ProfileStats | null>(null),
       ]);
 
       setProfile(profileData);
       setCity(locationData.city);
       setStats(statsData);
 
-      let friendStatus: FriendshipStatusUI = 'none';
-      let fId: string | null = null;
       if (!selfView && friendshipRes?.ok) {
-        const fd = await friendshipRes.json() as { friendshipId: string | null; friendshipStatus: FriendshipStatusUI };
-        friendStatus = fd.friendshipStatus;
-        fId          = fd.friendshipId;
+        const fd = await friendshipRes.json() as { friendshipStatus: FriendshipStatusUI; friendshipId: string | null };
+        setFriendshipStatus(fd.friendshipStatus);
+        setFriendshipId(fd.friendshipId);
       }
-      setFriendshipStatus(friendStatus);
-      setFriendshipId(fId);
 
       await fetchMatches(user.id, 1);
       setLoading(false);
-    };
-
+    }
     load();
   }, [playerId, router, fetchMatches]);
-
-  // ── Handlers ──────────────────────────────────────────────────────────────
 
   async function handleLoadMore() {
     if (!currentUserId || moreLoading) return;
@@ -249,20 +223,17 @@ export default function PlayerProfilePage() {
   function handleFriendshipChange(newStatus: FriendshipStatusUI, newId: string | null) {
     setFriendshipStatus(newStatus);
     setFriendshipId(newId);
-    // When becoming friends, reload match history with full access
     if (newStatus === 'accepted' && currentUserId) {
       fetchMatches(currentUserId, 1);
     }
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-am-bg">
         <Navbar />
         <div className="flex items-center justify-center py-24">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-ace-green border-t-transparent" />
         </div>
       </div>
     );
@@ -270,10 +241,10 @@ export default function PlayerProfilePage() {
 
   if (notFound || !profile) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-am-bg">
         <Navbar />
         <main className="mx-auto max-w-2xl px-4 py-20 text-center">
-          <p className="text-lg text-gray-500">{t('notFound')}</p>
+          <p className="text-lg text-white/50">{t('notFound')}</p>
         </main>
       </div>
     );
@@ -282,127 +253,104 @@ export default function PlayerProfilePage() {
   const displayName = profile.fullName ?? profile.username;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-am-bg">
       <Navbar />
 
+      {/* Grass header */}
+      <GrassHeader>
+        <div className="flex items-end gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-ace-green/40 bg-ace-green/20 text-sm font-bold text-ace-green">
+            {profile.avatarUrl
+              ? <img src={profile.avatarUrl} className="h-full w-full object-cover" alt="" />
+              : <span>{initials(displayName)}</span>}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate text-lg font-bold text-white">{displayName}</h1>
+            <p className="text-xs text-white/50">@{profile.username}</p>
+          </div>
+          {!isSelf && (
+            <div className="shrink-0">
+              <FriendshipButton
+                initialStatus={friendshipStatus}
+                initialFriendshipId={friendshipId}
+                targetUserId={playerId}
+                currentUserId={currentUserId}
+                onStatusChange={handleFriendshipChange}
+              />
+            </div>
+          )}
+          {isSelf && (
+            <Link
+              href="/profile/edit"
+              className="shrink-0 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/70 transition-colors hover:bg-white/15"
+            >
+              {t('editProfile')}
+            </Link>
+          )}
+        </div>
+      </GrassHeader>
+
       <main className="mx-auto max-w-2xl px-4 py-6">
-        <div className="space-y-5">
+        <div className="space-y-4">
 
-          {/* ── Profile header ──────────────────────────────────────────── */}
-          <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="flex items-start gap-4">
+          {/* Chips bar */}
+          <div className="flex flex-wrap gap-2">
+            {profile.level && (
+              <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${LEVEL_CHIP[profile.level] ?? 'border-white/10 bg-white/5 text-white/40'}`}>
+                {t2(profile.level as 'beginner')}
+              </span>
+            )}
+            {profile.dominantHand && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/55">
+                {profile.dominantHand === 'left' ? '🤚' : '✋'} {ti(profile.dominantHand === 'left' ? 'left' : 'right')}
+              </span>
+            )}
+            {profile.preferredSurface && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/55">
+                {SURFACE_EMOJI[profile.preferredSurface]} {t2(profile.preferredSurface as 'clay')}
+              </span>
+            )}
+            {city ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/55">
+                📍 {city}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/8 bg-white/3 px-3 py-1 text-xs text-white/30">
+                📍 {ti('noLocation')}
+              </span>
+            )}
+          </div>
 
-              {/* Avatar */}
-              <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full bg-green-100 flex items-center justify-center border-2 border-green-200">
-                {profile.avatarUrl
-                  ? <img src={profile.avatarUrl} className="h-full w-full object-cover" alt="" />
-                  : <span className="text-3xl">🎾</span>}
-              </div>
+          {profile.bio && (
+            <p className="text-sm leading-relaxed text-white/65">{profile.bio}</p>
+          )}
 
-              {/* Identity + actions */}
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h1 className="text-xl font-bold text-gray-900 truncate">{displayName}</h1>
-                    <p className="text-sm text-gray-500">@{profile.username}</p>
-                  </div>
-
-                  {/* Action button */}
-                  <div className="shrink-0">
-                    {isSelf ? (
-                      <Link
-                        href="/profile/edit"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
-                      >
-                        ✏️ {t('editProfile')}
-                      </Link>
-                    ) : currentUserId && (
-                      <FriendshipButton
-                        initialStatus={friendshipStatus}
-                        initialFriendshipId={friendshipId}
-                        targetUserId={playerId}
-                        currentUserId={currentUserId}
-                        onStatusChange={handleFriendshipChange}
-                      />
-                    )}
-                  </div>
-                </div>
-
-                {/* Bio */}
-                {profile.bio
-                  ? <p className="mt-2 text-sm leading-relaxed text-gray-700">{profile.bio}</p>
-                  : <p className="mt-2 text-sm text-gray-400 italic">{ti('noBio')}</p>}
-              </div>
-            </div>
-
-            {/* Chips row */}
-            <div className="mt-4 flex flex-wrap gap-2">
-              {profile.level && (
-                <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${LEVEL_COLOR[profile.level] ?? 'bg-gray-100 text-gray-700'}`}>
-                  {t2(profile.level as 'beginner')}
-                </span>
-              )}
-              {profile.dominantHand && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                  {profile.dominantHand === 'left' ? '🤚' : '✋'} {ti(profile.dominantHand === 'left' ? 'left' : 'right')}
-                </span>
-              )}
-              {profile.preferredSurface && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                  {SURFACE_EMOJI[profile.preferredSurface]} {t2(profile.preferredSurface as 'clay')}
-                </span>
-              )}
-              {city ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                  📍 {city}
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-3 py-1 text-xs text-gray-400">
-                  📍 {ti('noLocation')}
-                </span>
-              )}
-            </div>
-          </section>
-
-          {/* ── Stats bar ───────────────────────────────────────────────── */}
+          {/* Stats bar */}
           {stats && (
-            <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <div className="grid grid-cols-4 divide-x divide-gray-100 sm:grid-cols-5">
-
+            <section className="overflow-hidden rounded-xl border border-am-border bg-am-card" style={{ borderWidth: '0.5px' }}>
+              <div className="grid divide-x divide-am-border sm:grid-cols-4" style={{ gridTemplateColumns: viewMode === 'stranger' ? 'repeat(3,1fr)' : 'repeat(4,1fr)' }}>
                 <StatCell label={ts('matches')} value={String(stats.totalMatches)} />
-                <StatCell label={ts('wins')}    value={String(stats.wins)}         color="text-green-700" />
-
-                {/* Losses — hidden on stranger view for compactness */}
+                <StatCell label={ts('wins')}    value={String(stats.wins)}         color="text-ace-green" />
                 {viewMode !== 'stranger' && (
-                  <StatCell label={ts('losses')} value={String(stats.losses)} color="text-red-600" />
+                  <StatCell label={ts('losses')} value={String(stats.losses)} color="text-red-400" />
                 )}
-
                 <StatCell
                   label={ts('winRate')}
                   value={`${stats.winRate}%`}
-                  color={stats.winRate >= 50 ? 'text-green-700' : 'text-gray-700'}
+                  color={stats.winRate >= 50 ? 'text-ace-green' : 'text-white'}
                 />
-
-                {/* Streak — own profile only */}
-                {viewMode === 'self' && stats.currentStreak !== 0 && (
-                  <StatCell
-                    label={ts('streak')}
-                    value={`${stats.currentStreak > 0 ? 'W' : 'L'}${Math.abs(stats.currentStreak)}`}
-                    color={stats.currentStreak > 0 ? 'text-green-700' : 'text-red-600'}
-                  />
-                )}
               </div>
             </section>
           )}
 
-          {/* ── Match history ────────────────────────────────────────────── */}
-          <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-500">
-              {fullAccess ? th('title') : th('recentMatches')}
+          {/* Match history */}
+          <section className="rounded-xl border border-am-border bg-am-surface p-5" style={{ borderWidth: '0.5px' }}>
+            <h2 className="mb-4 text-[11px] font-semibold uppercase tracking-wider text-white/35">
+              {th('title')}
             </h2>
 
             {matches.length === 0 ? (
-              <p className="text-sm text-gray-400">{th('noMatches')}</p>
+              <p className="text-sm text-white/35">{th('noMatches')}</p>
             ) : fullAccess ? (
               <>
                 <div>
@@ -410,13 +358,12 @@ export default function PlayerProfilePage() {
                     <ProfileMatchCard key={m.id} match={m} profileId={playerId} th={th} />
                   ))}
                 </div>
-
                 {matches.length < matchTotal && (
                   <button
                     type="button"
-                    onClick={handleLoadMore}
                     disabled={moreLoading}
-                    className="mt-4 w-full rounded-xl border border-gray-200 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                    onClick={handleLoadMore}
+                    className="mt-4 w-full rounded-xl border border-am-border py-2.5 text-sm font-medium text-white/50 transition-colors hover:border-white/25 hover:text-white/80 disabled:opacity-50"
                   >
                     {moreLoading ? th('loading') : th('loadMore')}
                   </button>
@@ -429,9 +376,7 @@ export default function PlayerProfilePage() {
                     <LimitedMatchCard key={m.id} match={m} profileId={playerId} th={th} />
                   ))}
                 </div>
-
-                {/* Teaser to add as friend */}
-                <div className="mt-4 flex items-start gap-2 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-700">
+                <div className="mt-4 flex items-start gap-2 rounded-xl border border-ace-green/15 bg-ace-green/6 px-4 py-3 text-sm text-white/50">
                   <span className="mt-0.5 shrink-0">🔒</span>
                   <p>{th('friendsOnly', { name: profile.fullName ?? profile.username })}</p>
                 </div>
@@ -441,17 +386,6 @@ export default function PlayerProfilePage() {
 
         </div>
       </main>
-    </div>
-  );
-}
-
-// ── Helper ────────────────────────────────────────────────────────────────────
-
-function StatCell({ label, value, color = 'text-gray-900' }: { label: string; value: string; color?: string }) {
-  return (
-    <div className="flex flex-col items-center px-3 py-1 first:pl-0 last:pr-0">
-      <span className={`text-xl font-bold ${color}`}>{value}</span>
-      <span className="mt-0.5 text-center text-xs text-gray-500">{label}</span>
     </div>
   );
 }

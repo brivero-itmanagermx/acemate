@@ -13,10 +13,10 @@ interface StepTwoData {
 }
 
 interface Props {
-  data: StepTwoData;
+  data:     StepTwoData;
   onChange: (fields: Partial<StepTwoData>) => void;
-  onNext: () => void;
-  onBack: () => void;
+  onNext:   () => void;
+  onBack:   () => void;
 }
 
 const LEVELS: { id: Level; emoji: string; descKey: string }[] = [
@@ -42,13 +42,13 @@ export default function StepTwo({ data, onChange, onNext, onBack }: Props) {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-semibold text-gray-800">{t('title')}</h2>
-        <p className="mt-1 text-sm text-gray-500">{t('subtitle')}</p>
+        <h2 className="text-xl font-bold text-white">{t('title')}</h2>
+        <p className="mt-1 text-sm text-white/50">{t('subtitle')}</p>
       </div>
 
       {/* Skill level */}
       <div>
-        <p className="text-sm font-medium text-gray-700 mb-3">{t('levelLabel')}</p>
+        <p className="mb-3 text-sm font-medium text-white/60">{t('levelLabel')}</p>
         <div className="grid grid-cols-2 gap-3">
           {LEVELS.map(({ id, emoji, descKey }) => {
             const active = data.level === id;
@@ -59,16 +59,16 @@ export default function StepTwo({ data, onChange, onNext, onBack }: Props) {
                 onClick={() => onChange({ level: id })}
                 className={`flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-left transition-all ${
                   active
-                    ? 'border-green-600 bg-green-50 ring-1 ring-green-600'
-                    : 'border-gray-200 bg-white hover:border-green-300 hover:bg-green-50/50'
+                    ? 'border-ace-green bg-ace-green/10'
+                    : 'border-am-border bg-am-card hover:border-ace-green/40 hover:bg-ace-green/5'
                 }`}
               >
                 <span className="text-2xl">{emoji}</span>
                 <div>
-                  <div className={`text-sm font-semibold ${active ? 'text-green-800' : 'text-gray-800'}`}>
+                  <div className={`text-sm font-semibold ${active ? 'text-ace-green' : 'text-white'}`}>
                     {t(id as Level)}
                   </div>
-                  <div className="text-xs text-gray-500">{t(descKey as Level)}</div>
+                  <div className="text-xs text-white/40">{t(descKey as Level)}</div>
                 </div>
               </button>
             );
@@ -78,9 +78,9 @@ export default function StepTwo({ data, onChange, onNext, onBack }: Props) {
 
       {/* Dominant hand */}
       <div>
-        <p className="text-sm font-medium text-gray-700 mb-3">{t('handLabel')}</p>
+        <p className="mb-3 text-sm font-medium text-white/60">{t('handLabel')}</p>
         <div className="flex gap-3">
-          {(['left', 'right'] as Hand[]).map((hand) => {
+          {(['left', 'right'] as Hand[]).map(hand => {
             const active = data.dominantHand === hand;
             return (
               <button
@@ -89,8 +89,8 @@ export default function StepTwo({ data, onChange, onNext, onBack }: Props) {
                 onClick={() => onChange({ dominantHand: hand })}
                 className={`flex-1 rounded-xl border-2 py-3 text-sm font-semibold transition-all ${
                   active
-                    ? 'border-green-600 bg-green-50 text-green-800 ring-1 ring-green-600'
-                    : 'border-gray-200 bg-white text-gray-600 hover:border-green-300 hover:bg-green-50/50'
+                    ? 'border-ace-green bg-ace-green/10 text-ace-green'
+                    : 'border-am-border bg-am-card text-white/60 hover:border-ace-green/40'
                 }`}
               >
                 {hand === 'left' ? '← ' : ''}{t(hand)}{hand === 'right' ? ' →' : ''}
@@ -102,7 +102,7 @@ export default function StepTwo({ data, onChange, onNext, onBack }: Props) {
 
       {/* Preferred surface */}
       <div>
-        <p className="text-sm font-medium text-gray-700 mb-3">{t('surfaceLabel')}</p>
+        <p className="mb-3 text-sm font-medium text-white/60">{t('surfaceLabel')}</p>
         <div className="grid grid-cols-4 gap-2">
           {SURFACES.map(({ id, emoji, labelKey }) => {
             const active = data.preferredSurface === id;
@@ -111,10 +111,10 @@ export default function StepTwo({ data, onChange, onNext, onBack }: Props) {
                 key={id}
                 type="button"
                 onClick={() => onChange({ preferredSurface: id })}
-                className={`flex flex-col items-center gap-1.5 rounded-xl border-2 py-3 px-2 text-xs font-medium transition-all ${
+                className={`flex flex-col items-center gap-1.5 rounded-xl border-2 px-2 py-3 text-xs font-medium transition-all ${
                   active
-                    ? 'border-green-600 bg-green-50 text-green-800 ring-1 ring-green-600'
-                    : 'border-gray-200 bg-white text-gray-600 hover:border-green-300 hover:bg-green-50/50'
+                    ? 'border-ace-green bg-ace-green/10 text-ace-green'
+                    : 'border-am-border bg-am-card text-white/50 hover:border-ace-green/40'
                 }`}
               >
                 <span className="text-xl">{emoji}</span>
@@ -129,7 +129,7 @@ export default function StepTwo({ data, onChange, onNext, onBack }: Props) {
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50"
+          className="rounded-lg border border-am-border px-6 py-2.5 text-sm font-medium text-white/60 transition-colors hover:border-white/30 hover:text-white"
         >
           {tb('back')}
         </button>
@@ -137,7 +137,7 @@ export default function StepTwo({ data, onChange, onNext, onBack }: Props) {
           type="button"
           disabled={!canProceed}
           onClick={onNext}
-          className="rounded-lg bg-green-700 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-800 disabled:cursor-not-allowed disabled:bg-green-300"
+          className="rounded-lg bg-ace-green px-6 py-2.5 text-sm font-bold text-[#1a1a1a] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {tb('next')}
         </button>

@@ -20,7 +20,6 @@ export default function MatchFeed({ initialMatches, currentUserId }: Props) {
     const original = matches.find(m => m.id === matchId);
     if (!original) return;
 
-    // Optimistic update
     setMatches(prev => prev.map(m =>
       m.id !== matchId ? m : {
         ...m,
@@ -36,14 +35,13 @@ export default function MatchFeed({ initialMatches, currentUserId }: Props) {
         body:    JSON.stringify({ user_id: currentUserId }),
       });
     } catch {
-      // Revert to original on network error
       setMatches(prev => prev.map(m => m.id !== matchId ? m : original));
     }
   }
 
   if (matches.length === 0) {
     return (
-      <div className="py-12 text-center text-gray-400">
+      <div className="py-12 text-center text-white/30">
         <div className="text-4xl">📋</div>
         <p className="mt-3 text-sm">{t('empty')}</p>
       </div>
@@ -51,8 +49,8 @@ export default function MatchFeed({ initialMatches, currentUserId }: Props) {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400">{t('title')}</h2>
+    <div className="space-y-3">
+      <h2 className="text-[11px] font-semibold uppercase tracking-wider text-white/35">{t('title')}</h2>
       {matches.map(match => (
         <MatchCard
           key={match.id}

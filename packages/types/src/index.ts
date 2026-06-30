@@ -1,4 +1,5 @@
 export type PlayerLevel      = 'beginner' | 'intermediate' | 'advanced' | 'competitive';
+export type MatchType        = 'singles' | 'doubles';
 export type DominantHand     = 'left' | 'right';
 export type Surface          = 'clay' | 'hard' | 'grass' | 'indoor';
 export type MatchStatus      = 'pending' | 'confirmed' | 'disputed' | 'cancelled';
@@ -36,11 +37,18 @@ export interface SetScore {
 // Match — snake_case mirrors DB columns (no transform in API)
 export interface Match {
   id: string;
+  match_type: MatchType;
   player_home_id: string;
+  player_home2_id: string | null;
   /** Null when the opponent is unregistered — use opponent_name instead */
   player_away_id: string | null;
+  player_away2_id: string | null;
   opponent_name: string | null;
   opponent_email: string | null;
+  opponent2_name: string | null;
+  opponent2_email: string | null;
+  partner_name: string | null;
+  partner_email: string | null;
   winner_id: string | null;
   sets: SetScore[];
   surface: Surface | null;
@@ -65,7 +73,9 @@ export interface PlayerSummary {
 // Match with joined player data and reaction counts
 export interface MatchFeedItem extends Match {
   homePlayer: PlayerSummary | null;
+  homePlayer2: PlayerSummary | null;
   awayPlayer: PlayerSummary | null;
+  awayPlayer2: PlayerSummary | null;
   aceCount: number;
   userHasAced: boolean;
 }
@@ -158,6 +168,7 @@ export interface ProfileStats {
 // Single match in GET /api/v1/profiles/:id/matches
 export interface ProfileMatchItem {
   id:              string;
+  match_type:      MatchType;
   played_at:       string;
   surface:         Surface | null;
   winner_id:       string | null;
@@ -166,6 +177,10 @@ export interface ProfileMatchItem {
   is_home:         boolean;
   opponent:        PlayerSummary | null;
   opponent_name:   string | null;   // guest opponent name when not a registered player
+  opponent2:       PlayerSummary | null;
+  opponent2_name:  string | null;
+  partner:         PlayerSummary | null;
+  partner_name:    string | null;
   played_together: boolean;         // true if the viewer played this match vs the profile owner
 }
 

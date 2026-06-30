@@ -93,6 +93,7 @@
       "lost": "Perdido",
       "pending": "Pendiente",
       "guest": "Invitado",
+      "doubles": "Dobles",
       "ace": "¡Ace!",
       "surface": {
         "clay": "Arcilla",
@@ -118,13 +119,23 @@
       "playedAt": "Fecha y hora",
       "locationName": "Lugar (opcional)",
       "notes": "Notas (opcional)",
+      "matchType": {
+        "label": "Tipo de partido",
+        "singles": "Singles",
+        "doubles": "Dobles"
+      },
+      "partner": {
+        "label": "Tu compañero/a"
+      },
       "opponent": {
         "label": "Oponente",
+        "labelDoubles1": "Rivales — Jugador 1",
+        "labelDoubles2": "Rivales — Jugador 2",
         "searchPlaceholder": "Buscar por usuario o nombre…",
         "switchToGuest": "Agregar como invitado",
         "switchToSearch": "Buscar jugadores registrados",
-        "guestLabel": "Oponente invitado",
-        "guestName": "Nombre del oponente",
+        "guestLabel": "Invitado",
+        "guestName": "Nombre",
         "guestEmail": "Correo electrónico (opcional)",
         "selected": "{name} seleccionado"
       },
@@ -132,6 +143,8 @@
         "label": "Marcador",
         "you": "Tú",
         "opponent": "Riv.",
+        "myTeam": "Mi equipo",
+        "theirTeam": "Su equipo",
         "set": "Set {n}",
         "addSet": "+ Agregar set",
         "remove": "Eliminar"
@@ -147,7 +160,18 @@
         "label": "Ganador",
         "me": "Gané yo",
         "opponent": "Ganó el rival",
+        "myTeam": "Ganó mi equipo",
+        "theirTeam": "Ganó el equipo rival",
         "none": "Sin decidir"
+      },
+      "successTitle": "¡Partido registrado!",
+      "successSubtitle": "Tu partido ha sido guardado.",
+      "goToDashboard": "Ir al dashboard",
+      "nudge": {
+        "prompt": "¿Quieres agregar a {name} como amigo?",
+        "addFriend": "Agregar amigo",
+        "maybeLater": "Quizás luego",
+        "sent": "Solicitud enviada ✓"
       }
     }
   },

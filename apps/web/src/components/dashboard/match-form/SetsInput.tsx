@@ -22,7 +22,7 @@ export default function SetsInput({ sets, onChange }: Props) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-3 text-xs font-medium text-gray-400 mb-1">
+      <div className="mb-1 flex items-center gap-3 text-[11px] font-medium text-white/35">
         <div className="w-14" />
         <div className="w-16 text-center">{t('you')}</div>
         <div className="w-4" />
@@ -31,7 +31,7 @@ export default function SetsInput({ sets, onChange }: Props) {
 
       {sets.map((set, i) => (
         <div key={i} className="flex items-center gap-3">
-          <span className="w-14 text-xs font-medium text-gray-500 shrink-0">
+          <span className="w-14 shrink-0 text-xs font-medium text-white/40">
             {t('set', { n: i + 1 })}
           </span>
           <input
@@ -40,24 +40,24 @@ export default function SetsInput({ sets, onChange }: Props) {
             max={99}
             value={set.home}
             onChange={e => update(i, 'home', e.target.value)}
-            className="w-16 rounded-lg border border-gray-300 px-2 py-2 text-center text-sm font-medium focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            className="w-16 rounded-lg border border-am-border bg-am-card px-2 py-2 text-center text-sm font-semibold text-white focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
             placeholder="0"
           />
-          <span className="w-4 text-center text-gray-400 font-medium">—</span>
+          <span className="w-4 text-center font-medium text-white/30">—</span>
           <input
             type="number"
             min={0}
             max={99}
             value={set.away}
             onChange={e => update(i, 'away', e.target.value)}
-            className="w-16 rounded-lg border border-gray-300 px-2 py-2 text-center text-sm font-medium focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            className="w-16 rounded-lg border border-am-border bg-am-card px-2 py-2 text-center text-sm font-semibold text-white focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
             placeholder="0"
           />
           {sets.length > 1 && (
             <button
               type="button"
               onClick={() => onChange(sets.filter((_, j) => j !== i))}
-              className="ml-1 text-xs text-gray-400 hover:text-red-500 transition-colors"
+              className="ml-1 text-xs text-white/25 transition-colors hover:text-red-400"
               aria-label={t('remove')}
             >
               ✕
@@ -70,7 +70,7 @@ export default function SetsInput({ sets, onChange }: Props) {
         <button
           type="button"
           onClick={() => onChange([...sets, { home: '', away: '' }])}
-          className="text-sm font-medium text-green-700 hover:underline"
+          className="text-sm font-semibold text-ace-green hover:underline"
         >
           {t('addSet')}
         </button>

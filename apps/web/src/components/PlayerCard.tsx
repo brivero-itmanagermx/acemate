@@ -5,20 +5,20 @@ import { Link } from '@/i18n/navigation';
 import FriendshipButton from './FriendshipButton';
 import type { FriendshipStatusUI } from '@acemate/types';
 
-const LEVEL_COLOR: Record<string, string> = {
-  beginner:     'text-blue-600 bg-blue-50 border-blue-100',
-  intermediate: 'text-green-600 bg-green-50 border-green-100',
-  advanced:     'text-orange-600 bg-orange-50 border-orange-100',
-  competitive:  'text-red-600 bg-red-50 border-red-100',
+const LEVEL_CHIP: Record<string, string> = {
+  beginner:     'border-blue-500/30  bg-blue-500/10  text-blue-400',
+  intermediate: 'border-ace-green/30 bg-ace-green/10 text-ace-green',
+  advanced:     'border-rally-orange/30 bg-rally-orange/10 text-rally-orange',
+  competitive:  'border-red-500/30   bg-red-500/10   text-red-400',
 };
 
 export interface PlayerCardData {
-  id:               string;
-  username:         string;
-  full_name:        string | null;
-  avatar_url:       string | null;
-  level?:           string | null;
-  friendshipId?:    string | null;
+  id:                string;
+  username:          string;
+  full_name:         string | null;
+  avatar_url:        string | null;
+  level?:            string | null;
+  friendshipId?:     string | null;
   friendshipStatus?: FriendshipStatusUI;
 }
 
@@ -29,36 +29,33 @@ interface Props {
 }
 
 export default function PlayerCard({ player, currentUserId, onFriendshipChange }: Props) {
-  const t    = useTranslations('players');
+  const t      = useTranslations('players');
   const isSelf = player.id === currentUserId;
 
   return (
-    <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-      {/* Avatar */}
+    <div className="flex items-center gap-4 rounded-xl border border-am-border bg-am-surface p-4" style={{ borderWidth: '0.5px' }}>
       <Link href={`/players/${player.id}`} className="shrink-0">
-        <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-gray-100">
+        <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-ace-green/15 text-xl font-bold text-ace-green">
           {player.avatar_url
             ? <img src={player.avatar_url} className="h-full w-full object-cover" alt="" />
-            : <span className="text-xl">🎾</span>}
+            : <span>🎾</span>}
         </div>
       </Link>
 
-      {/* Info */}
       <div className="min-w-0 flex-1">
         <Link href={`/players/${player.id}`} className="hover:underline">
-          <p className="truncate font-semibold text-gray-900">
+          <p className="truncate font-semibold text-white">
             {player.full_name ?? player.username}
           </p>
         </Link>
-        <p className="text-xs text-gray-500">@{player.username}</p>
+        <p className="text-xs text-white/40">@{player.username}</p>
         {player.level && (
-          <span className={`mt-1 inline-block rounded-full border px-2 py-0.5 text-xs font-medium ${LEVEL_COLOR[player.level] ?? 'text-gray-600 bg-gray-100 border-gray-200'}`}>
+          <span className={`mt-1.5 inline-block rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${LEVEL_CHIP[player.level] ?? 'border-white/10 bg-white/5 text-white/40'}`}>
             {t(`level.${player.level}` as 'level.beginner')}
           </span>
         )}
       </div>
 
-      {/* Friendship button — hidden for self */}
       {!isSelf && (
         <div className="shrink-0">
           <FriendshipButton

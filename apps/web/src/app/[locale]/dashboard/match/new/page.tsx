@@ -21,23 +21,23 @@ export default function NewMatchPage() {
 
   if (!userId) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+      <div className="flex min-h-screen items-center justify-center bg-am-bg">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-ace-green border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b border-gray-100 bg-white px-4 py-4">
+    <div className="min-h-screen bg-am-bg">
+      <header className="border-b border-am-border bg-am-bg px-4 py-4 sticky top-0 z-10" style={{ borderBottomWidth: '0.5px' }}>
         <div className="mx-auto flex max-w-2xl items-center gap-3">
           <Link
             href="/dashboard"
-            className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-sm text-white/40 hover:text-white/80 transition-colors"
           >
             ← {t('back')}
           </Link>
-          <h1 className="text-base font-semibold text-gray-900">{t('title')}</h1>
+          <h1 className="text-base font-semibold text-white">{t('title')}</h1>
         </div>
       </header>
 

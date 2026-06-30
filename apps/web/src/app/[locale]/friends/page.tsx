@@ -21,7 +21,7 @@ function EmptyTab({ message }: { message: string }) {
   return (
     <div className="py-12 text-center">
       <div className="mb-3 text-4xl">🎾</div>
-      <p className="text-sm text-gray-400">{message}</p>
+      <p className="text-sm text-white/40">{message}</p>
     </div>
   );
 }
@@ -59,10 +59,10 @@ export default function FriendsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-am-bg">
         <Navbar />
         <div className="flex items-center justify-center py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-ace-green border-t-transparent" />
         </div>
       </div>
     );
@@ -75,13 +75,13 @@ export default function FriendsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-am-bg">
       <Navbar />
-      <main className="mx-auto max-w-2xl px-4 py-6">
-        <h1 className="mb-6 text-2xl font-bold text-gray-900">{t('title')}</h1>
+      <main className="mx-auto max-w-2xl px-4 py-8">
+        <h1 className="mb-6 text-2xl font-bold text-white">{t('title')}</h1>
 
         {/* Tab bar */}
-        <div className="mb-6 flex gap-1 rounded-xl bg-gray-100 p-1">
+        <div className="mb-6 flex gap-1 rounded-xl bg-am-surface p-1 border border-am-border" style={{ borderWidth: '0.5px' }}>
           {tabs.map(({ key, label, count }) => (
             <button
               key={key}
@@ -89,16 +89,16 @@ export default function FriendsPage() {
               onClick={() => setTab(key)}
               className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-all ${
                 tab === key
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-am-card text-white shadow-sm'
+                  : 'text-white/40 hover:text-white/70'
               }`}
             >
               {label}
               {count > 0 && (
                 <span className={`rounded-full px-1.5 py-0.5 text-xs font-bold ${
                   tab === key
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-200 text-gray-600'
+                    ? 'bg-ace-green/15 text-ace-green'
+                    : 'bg-white/8 text-white/40'
                 }`}>
                   {count}
                 </span>

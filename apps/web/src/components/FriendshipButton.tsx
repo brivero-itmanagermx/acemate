@@ -81,7 +81,7 @@ export default function FriendshipButton({
   if (loading) {
     return (
       <div className="flex h-8 w-8 items-center justify-center">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-am-border border-t-ace-green" />
       </div>
     );
   }
@@ -92,7 +92,7 @@ export default function FriendshipButton({
         <button
           type="button"
           onClick={sendRequest}
-          className="rounded-lg border border-green-600 px-3 py-1.5 text-xs font-semibold text-green-700 transition-colors hover:bg-green-50"
+          className="rounded-lg border border-ace-green/50 px-3 py-1.5 text-xs font-semibold text-ace-green transition-colors hover:border-ace-green hover:bg-ace-green/10"
         >
           {t('add')}
         </button>
@@ -101,13 +101,13 @@ export default function FriendshipButton({
     case 'pending_sent':
       return (
         <div className="flex items-center gap-2">
-          <span className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-500">
+          <span className="rounded-full border border-rally-orange/30 bg-rally-orange/10 px-3 py-1 text-xs font-medium text-rally-orange">
             {t('pending')}
           </span>
           <button
             type="button"
             onClick={remove}
-            className="text-xs text-gray-400 transition-colors hover:text-red-500"
+            className="text-xs text-white/30 transition-colors hover:text-red-400"
           >
             {t('cancel')}
           </button>
@@ -120,14 +120,14 @@ export default function FriendshipButton({
           <button
             type="button"
             onClick={() => respond('accepted')}
-            className="rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-800"
+            className="rounded-lg bg-ace-green px-3 py-1.5 text-xs font-bold text-[#1a1a1a] transition-opacity hover:opacity-90"
           >
             {t('accept')}
           </button>
           <button
             type="button"
             onClick={() => respond('rejected')}
-            className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-50"
+            className="rounded-lg border border-am-border px-3 py-1.5 text-xs font-medium text-white/50 transition-colors hover:border-white/30 hover:text-white/70"
           >
             {t('reject')}
           </button>
@@ -137,13 +137,13 @@ export default function FriendshipButton({
     case 'accepted':
       return (
         <div className="flex items-center gap-2">
-          <span className="rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
-            {t('friends')}
+          <span className="rounded-full border border-ace-green/30 bg-ace-green/10 px-3 py-1 text-xs font-medium text-ace-green">
+            {t('friends')} ✓
           </span>
           <button
             type="button"
             onClick={remove}
-            className="text-xs text-gray-400 transition-colors hover:text-red-500"
+            className="text-xs text-white/30 transition-colors hover:text-red-400"
           >
             {t('remove')}
           </button>

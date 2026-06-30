@@ -32,7 +32,6 @@ export default function VenueSelector({ value, onChange, currentUserId }: Props)
   const [loading,   setLoading]   = useState(false);
   const [creating,  setCreating]  = useState(false);
 
-  // Load user's own venues on mount for quick-select chips
   useEffect(() => {
     fetch(`${API}/api/v1/venues?userId=${currentUserId}&limit=5`)
       .then(r => r.ok ? r.json() : [])
@@ -40,7 +39,6 @@ export default function VenueSelector({ value, onChange, currentUserId }: Props)
       .catch(() => {});
   }, [currentUserId]);
 
-  // Debounced search while typing
   useEffect(() => {
     const q = query.trim();
     if (!q) { setResults([]); setOpen(false); return; }
@@ -49,8 +47,7 @@ export default function VenueSelector({ value, onChange, currentUserId }: Props)
     const timer = setTimeout(async () => {
       try {
         const params = new URLSearchParams({ q, userId: currentUserId, limit: '8' });
-        const res  = await fetch(`${API}/api/v1/venues?${params}`);
-        const data = (await res.json()) as VenueOption[];
+        const data   = await fetch(`${API}/api/v1/venues?${params}`).then(r => r.json()) as VenueOption[];
         setResults(data);
         setOpen(true);
       } catch {
@@ -59,7 +56,6 @@ export default function VenueSelector({ value, onChange, currentUserId }: Props)
         setLoading(false);
       }
     }, 350);
-
     return () => clearTimeout(timer);
   }, [query, currentUserId]);
 
@@ -80,37 +76,34 @@ export default function VenueSelector({ value, onChange, currentUserId }: Props)
         body:    JSON.stringify({ name, created_by: currentUserId }),
       });
       if (!res.ok) return;
-      const venue = (await res.json()) as VenueOption;
+      const venue = await res.json() as VenueOption;
       setOwnVenues(prev => [venue, ...prev.filter(v => v.id !== venue.id)].slice(0, 5));
       onChange({ venueId: venue.id, venueName: venue.name });
       setQuery('');
       setOpen(false);
     } catch {
-      // Silently fail — user can try again
+      // Silently fail — user can retry
     } finally {
       setCreating(false);
     }
   }
 
-  // ── Selected state: show badge with clear button ──────────────────────────
   if (value.venueId) {
     return (
       <button
         type="button"
         onClick={() => onChange({ venueId: null, venueName: null })}
-        className="inline-flex items-center gap-2 rounded-xl border border-green-300 bg-green-50 px-4 py-2.5 text-sm font-medium text-green-800 transition-colors hover:bg-green-100"
+        className="inline-flex items-center gap-2 rounded-xl border border-ace-green/30 bg-ace-green/10 px-4 py-2.5 text-sm font-medium text-ace-green transition-colors hover:border-ace-green/50 hover:bg-ace-green/15"
       >
         <span>📍</span>
         <span className="max-w-[200px] truncate">{value.venueName}</span>
-        <span className="ml-1 text-green-500 hover:text-red-500">×</span>
+        <span className="ml-1 text-ace-green/50 hover:text-red-400">×</span>
       </button>
     );
   }
 
-  // ── Empty / searching state ───────────────────────────────────────────────
   return (
     <div className="space-y-3">
-      {/* Quick-select chips: user's own venues */}
       {ownVenues.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {ownVenues.map(v => (
@@ -118,7 +111,7 @@ export default function VenueSelector({ value, onChange, currentUserId }: Props)
               key={v.id}
               type="button"
               onClick={() => selectVenue(v)}
-              className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-all hover:border-green-400 hover:bg-green-50 hover:text-green-800"
+              className="rounded-lg border border-am-border bg-am-card px-3 py-1.5 text-xs font-medium text-white/60 transition-all hover:border-ace-green/40 hover:bg-ace-green/8 hover:text-ace-green"
             >
               📍 {v.name}
             </button>
@@ -126,7 +119,6 @@ export default function VenueSelector({ value, onChange, currentUserId }: Props)
         </div>
       )}
 
-      {/* Search input */}
       <div className="relative">
         <input
           type="text"
@@ -135,38 +127,37 @@ export default function VenueSelector({ value, onChange, currentUserId }: Props)
           onChange={e => setQuery(e.target.value)}
           onFocus={() => (results.length > 0 || query.trim()) && setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+          className="w-full rounded-lg border border-am-border bg-am-card px-4 py-2.5 text-sm text-white placeholder-white/30 focus:border-ace-green focus:outline-none focus:ring-1 focus:ring-ace-green"
         />
         {loading && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-ace-green" />
         )}
 
         {open && (
-          <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+          <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-am-border bg-[#1e1e1e] shadow-xl">
             {results.map(v => (
               <button
                 key={v.id}
                 type="button"
                 onMouseDown={() => selectVenue(v)}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-green-50"
+                className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-ace-green/10"
               >
-                <span className="text-gray-400">📍</span>
-                <span className="flex-1 font-medium text-gray-900">{v.name}</span>
+                <span className="text-white/40">📍</span>
+                <span className="flex-1 font-medium text-white">{v.name}</span>
                 {v.created_by === currentUserId && (
-                  <span className="text-xs text-gray-400">{t('yours')}</span>
+                  <span className="text-xs text-white/30">{t('yours')}</span>
                 )}
               </button>
             ))}
 
-            {/* Create new venue */}
             {query.trim() && (
               <button
                 type="button"
                 onMouseDown={handleCreate}
                 disabled={creating}
-                className="flex w-full items-center gap-2 border-t border-gray-100 px-4 py-3 text-left text-sm font-medium text-green-700 transition-colors hover:bg-green-50 disabled:opacity-50"
+                className="flex w-full items-center gap-2 border-t border-am-border px-4 py-3 text-left text-sm font-semibold text-ace-green transition-colors hover:bg-ace-green/10 disabled:opacity-50"
               >
-                <span className="text-base font-bold">+</span>
+                <span className="text-base">+</span>
                 <span>{creating ? t('creating') : t('addNew', { name: query.trim() })}</span>
               </button>
             )}

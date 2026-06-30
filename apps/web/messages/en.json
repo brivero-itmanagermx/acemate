@@ -93,6 +93,7 @@
       "lost": "Lost",
       "pending": "Pending",
       "guest": "Guest",
+      "doubles": "Doubles",
       "ace": "Ace!",
       "surface": {
         "clay": "Clay",
@@ -118,13 +119,23 @@
       "playedAt": "Date & time",
       "locationName": "Location (optional)",
       "notes": "Notes (optional)",
+      "matchType": {
+        "label": "Match type",
+        "singles": "Singles",
+        "doubles": "Doubles"
+      },
+      "partner": {
+        "label": "Your partner"
+      },
       "opponent": {
         "label": "Opponent",
+        "labelDoubles1": "Opponents — Player 1",
+        "labelDoubles2": "Opponents — Player 2",
         "searchPlaceholder": "Search by username or name…",
         "switchToGuest": "Add as guest",
         "switchToSearch": "Search registered players",
-        "guestLabel": "Guest opponent",
-        "guestName": "Opponent name",
+        "guestLabel": "Guest",
+        "guestName": "Name",
         "guestEmail": "Email (optional)",
         "selected": "{name} selected"
       },
@@ -132,6 +143,8 @@
         "label": "Score",
         "you": "You",
         "opponent": "Opp.",
+        "myTeam": "My team",
+        "theirTeam": "Their team",
         "set": "Set {n}",
         "addSet": "+ Add set",
         "remove": "Remove"
@@ -147,7 +160,18 @@
         "label": "Winner",
         "me": "I won",
         "opponent": "Opponent won",
+        "myTeam": "My team won",
+        "theirTeam": "Their team won",
         "none": "Undecided"
+      },
+      "successTitle": "Match registered!",
+      "successSubtitle": "Your match has been saved.",
+      "goToDashboard": "Go to dashboard",
+      "nudge": {
+        "prompt": "Want to add {name} as a friend?",
+        "addFriend": "Add friend",
+        "maybeLater": "Maybe later",
+        "sent": "Request sent ✓"
       }
     }
   },
